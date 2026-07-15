@@ -19,13 +19,13 @@ export default function SobrePage() {
             </div>
             <div>
               <p className="font-display text-[20px] font-semibold text-ink">
-                [Renan Rangel]
+                Renan Rangel
               </p>
               <p className="mt-1 text-[14px] text-ink-soft">
-                [CEO e fundador do AparecidaShop]
+                Fundador do AparecidaShop
               </p>
               <p className="mt-3 max-w-md text-[13.5px] leading-relaxed text-ink-soft">
-                [Graduando em ADS e apaixonado por tecnologia.]
+                Graduando em ADS e apaixonado por tecnologia
               </p>
             </div>
           </div>
@@ -39,7 +39,7 @@ export default function SobrePage() {
                 </h2>
               </div>
               <p className="mt-3 rounded-xl border border-dashed border-sand bg-white p-5 text-[14.5px] leading-relaxed text-ink-soft">
-                [Ao perceber a dificuldade dos visitantes de encontrar lojas específicas na cidade, surgiu a ideia de criar uma plataforma que conectasse lojas e visitantes, para que os mesmos pudessem encontrar facilmente os estabelecimentos que já visitaram e conhecer novos lugares.]
+                Ao perceber a dificuldade dos visitantes de encontrar lojas específicas na cidade, surgiu a ideia de criar uma plataforma que conectasse lojas e visitantes, para que os mesmos pudessem encontrar facilmente os estabelecimentos que já visitaram e conhecer novos lugares.
               </p>
             </div>
 
@@ -51,7 +51,7 @@ export default function SobrePage() {
                 </h2>
               </div>
               <p className="mt-3 rounded-xl border border-dashed border-sand bg-white p-5 text-[14.5px] leading-relaxed text-ink-soft">
-                [Com uma visão voltada para a inovação e o desenvolvimento do comércio local, buscamos conectar lojistas e visitantes de forma eficiente e prática.]
+                Com uma visão voltada para a inovação e o desenvolvimento do comércio local, buscamos conectar lojistas e visitantes de forma eficiente e prática.
               </p>
             </div>
 
@@ -63,7 +63,7 @@ export default function SobrePage() {
                 </h2>
               </div>
               <p className="mt-3 rounded-xl border border-dashed border-sand bg-white p-5 text-[14.5px] leading-relaxed text-ink-soft">
-                [Hoje a plataforma conecta o visitante e as lojas, divulgando a localização e redes de contato, e no futuro, pretendemos tornar o AparecidaShop seu novo site de compras preferido e expandir para outras cidades turísticas, criando parcerias com o comércio local e oferecendo uma experiência ainda mais completa para os visitantes.]
+                Hoje a plataforma conecta o visitante e as lojas, divulgando a localização e redes de contato, e no futuro, pretendemos tornar o AparecidaShop seu novo site de compras preferido e expandir para outras cidades turísticas, criando parcerias com o comércio local e oferecendo uma experiência ainda mais completa para os visitantes.
               </p>
             </div>
           </div>

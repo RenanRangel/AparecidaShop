@@ -1,0 +1,277 @@
+// AparecidaShop — schema.prisma
+// Cobre o MVP atual (Store, Product) + os pontos de extensão já decididos:
+// múltiplos admins por loja, aprovação de loja, múltiplas imagens por
+// produto, múltiplas categorias por loja, auditoria, favoritos e avaliações.
+//
+// Convenções:
+// - id sempre cuid()
+// - dinheiro sempre em centavos (Int), nunca Float
+// - toda entidade "editável" tem createdAt + updatedAt
+// - enums em vez de strings livres onde o valor é um conjunto fechado
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Usuários
+// ---------------------------------------------------------------------------
+
+enum UserRole {
+  ADMIN
+  LOJISTA
+  VISITANTE
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String?
+  role         UserRole @default(VISITANTE)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  storeMemberships  StoreMember[]
+  statusChangesMade StoreStatusHistory[] @relation("StatusChangedBy")
+  auditLogsMade     AuditLog[]
+  reviews           Review[]
+  favoriteStores    StoreFavorite[]
+  favoriteProducts  ProductFavorite[]
+
+  @@map("users")
+}
+
+// ---------------------------------------------------------------------------
+// Lojas
+// ---------------------------------------------------------------------------
+
+enum StoreStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SUSPENDED
+}
+
+model Store {
+  id          String      @id @default(cuid())
+  name        String
+  slug        String      @unique
+  description String
+  location    String
+  latitude    Float?
+  longitude   Float?
+
+  cnpj        String?
+  phone       String?
+  whatsapp    String?
+  email       String?
+  instagram   String?
+  gallery     String?
+
+  logoInitials String
+  coverTone    String     @default("pine")
+
+  status      StoreStatus @default(PENDING)
+  isVerified  Boolean     @default(false)
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  members       StoreMember[]
+  categories    StoreCategory[]
+  products      Product[]
+  statusHistory StoreStatusHistory[]
+  reviews       Review[]
+  favoritedBy   StoreFavorite[]
+
+  @@index([status])
+  @@map("stores")
+}
+
+enum StoreMemberRole {
+  OWNER
+  EDITOR
+}
+
+// N:N User <-> Store — múltiplos administradores por loja,
+// um usuário podendo administrar mais de uma loja.
+model StoreMember {
+  id        String          @id @default(cuid())
+  store     Store           @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  storeId   String
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  role      StoreMemberRole @default(OWNER)
+  createdAt DateTime        @default(now())
+
+  @@unique([storeId, userId])
+  @@map("store_members")
+}
+
+// ---------------------------------------------------------------------------
+// Categorias
+// ---------------------------------------------------------------------------
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+
+  stores   StoreCategory[]
+  products Product[]
+
+  @@map("categories")
+}
+
+// N:N Store <-> Category — múltiplas categorias por loja.
+model StoreCategory {
+  store      Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  storeId    String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId String
+
+  @@id([storeId, categoryId])
+  @@map("store_categories")
+}
+
+// ---------------------------------------------------------------------------
+// Produtos
+// ---------------------------------------------------------------------------
+
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model Product {
+  id         String        @id @default(cuid())
+  store      Store         @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  storeId    String
+  category   Category      @relation(fields: [categoryId], references: [id])
+  categoryId String
+
+  name        String
+  description String?
+  price       Int?          // centavos; null = "sob consulta"
+  status      ProductStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  images      ProductImage[]
+  favoritedBy ProductFavorite[]
+
+  @@index([storeId])
+  @@index([categoryId])
+  @@map("products")
+}
+
+// Múltiplas imagens por produto, com ordem e uma capa.
+model ProductImage {
+  id        String   @id @default(cuid())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+  url       String
+  altText   String?
+  position  Int      @default(0)
+  isCover   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([productId])
+  @@map("product_images")
+}
+
+// ---------------------------------------------------------------------------
+// Histórico de status da loja
+// ---------------------------------------------------------------------------
+
+model StoreStatusHistory {
+  id              String       @id @default(cuid())
+  store           Store        @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  storeId         String
+  fromStatus      StoreStatus?
+  toStatus        StoreStatus
+  changedBy       User?        @relation("StatusChangedBy", fields: [changedByUserId], references: [id])
+  changedByUserId String?
+  reason          String?
+  createdAt       DateTime     @default(now())
+
+  @@index([storeId])
+  @@map("store_status_history")
+}
+
+// ---------------------------------------------------------------------------
+// Auditoria genérica
+// ---------------------------------------------------------------------------
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  APPROVE
+  REJECT
+}
+
+// entityType/entityId não são FK real de propósito: precisa cobrir Store,
+// Product, User etc. sem uma tabela de log por entidade.
+model AuditLog {
+  id         String      @id @default(cuid())
+  entityType String
+  entityId   String
+  action     AuditAction
+  user       User?       @relation(fields: [userId], references: [id])
+  userId     String?
+  diff       Json?
+  createdAt  DateTime    @default(now())
+
+  @@index([entityType, entityId])
+  @@map("audit_logs")
+}
+
+// ---------------------------------------------------------------------------
+// Avaliações e favoritos
+// ---------------------------------------------------------------------------
+
+model Review {
+  id        String   @id @default(cuid())
+  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  storeId   String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  rating    Int      // 1-5, validado na camada de aplicação
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([storeId, userId])
+  @@map("reviews")
+}
+
+model StoreFavorite {
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  storeId   String
+  createdAt DateTime @default(now())
+
+  @@id([userId, storeId])
+  @@map("store_favorites")
+}
+
+model ProductFavorite {
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+  createdAt DateTime @default(now())
+
+  @@id([userId, productId])
+  @@map("product_favorites")
+}

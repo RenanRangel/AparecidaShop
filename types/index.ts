@@ -1,11 +1,9 @@
-import type { StoreCategory } from '@/lib/constants/categories';
-
 export type { StoreCategory } from '@/lib/constants/categories';
 
 export interface Store {
   id: string;
   name: string;
-  category: StoreCategory;
+  category: string;
   location: string; // ex: "Galeria Recreio, Centro"
   description: string;
   logoInitials: string;
@@ -25,7 +23,7 @@ export interface Product {
   storeId: string;
   price: number | null; // null = "sob consulta"
   imageTone: 'pine' | 'marigold' | 'sand';
-  category: StoreCategory;
+  category: string;
 }
 
 /**

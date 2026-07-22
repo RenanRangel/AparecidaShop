@@ -2,6 +2,7 @@
 
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
+import type { Prisma } from '@prisma/client'; 
 import { prisma } from '@/lib/prisma';
 import { isValidCNPJ, isValidEmail, isValidPhone } from '@/lib/validation';
 import { slugify } from '@/lib/utils';
@@ -61,7 +62,7 @@ export async function createStore(
     .map((w) => w[0]!.toUpperCase())
     .join('');
 
-  await prisma.$transaction(async (tx) => {
+  await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
     const store = await tx.store.create({
       data: {
         name,

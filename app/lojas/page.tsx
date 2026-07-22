@@ -2,6 +2,8 @@ import { Container } from '@/components/shared/Container';
 import { CategoryFilter } from '@/components/lojas/CategoryFilter';
 import { storeRepository } from '@/lib/repositories';
 
+export const dynamic = "force-dynamic";
+
 export default async function LojasPage() {
   const stores = await storeRepository.getAll();
 

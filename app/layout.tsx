@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
+// @ts-ignore: allow side-effect CSS import when no type declarations are present
 import './globals.css';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
+import { Providers } from "@/app/providers";
 
 export const metadata: Metadata = {
   title: 'AparecidaShop — comércio local de Aparecida-SP',
@@ -22,7 +24,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <Navbar />
-        <main>{children}</main>
+        <main>
+          <Providers>{children}</Providers>
+          </main>
         <Footer />
       </body>
     </html>

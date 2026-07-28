@@ -6,7 +6,6 @@ import type { StoreRepository } from "../types";
 function mapStore(store: any): Store {
   return {
     id: store.id,
-
     slug: store.slug,
 
     name: store.name,

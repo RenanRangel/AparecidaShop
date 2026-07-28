@@ -2,17 +2,19 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, MapPin } from 'lucide-react';
+import { Menu, X, MapPin, User } from 'lucide-react';
+import { useSession, signOut } from 'next-auth/react'; // ← novo import
 import { Container } from '@/components/shared/Container';
 
 const LINKS = [
   { href: '/', label: 'Início' },
   { href: '/lojas', label: 'Lojas' },
-  { href: '/sobre', label: 'Sobre Mim' },
+  { href: '/sobre', label: 'Sobre' }, // ← "Sobre Mim" → "Sobre"
 ];
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const { data: session, status } = useSession(); // ← novo
 
   return (
     <header className="sticky top-0 z-50 border-b border-sand bg-bg/90 backdrop-blur-md">
@@ -38,7 +40,34 @@ export function Navbar() {
           ))}
         </nav>
 
-        <div className="hidden md:block">
+        {/* ← bloco desktop trocado */}
+        <div className="hidden items-center gap-4 md:flex">
+          {status === 'authenticated' ? (
+            <>
+              <Link
+                href="/painel"
+                className="flex items-center gap-1.5 text-[14px] font-medium text-ink-soft transition-colors hover:text-ink"
+              >
+                <User size={15} />
+                Painel
+              </Link>
+              <button
+                type="button"
+                onClick={() => signOut({ callbackUrl: '/' })}
+                className="text-[13.5px] font-medium text-ink-soft transition-colors hover:text-ink"
+              >
+                Sair
+              </button>
+            </>
+          ) : status === 'unauthenticated' ? (
+            <Link
+              href="/login"
+              className="text-[14px] font-medium text-ink-soft transition-colors hover:text-ink"
+            >
+              Entrar
+            </Link>
+          ) : null /* status === 'loading': não mostra nada pra evitar piscar */}
+
           <Link
             href="/para-lojas"
             className="inline-flex items-center rounded-full bg-marigold px-5 py-2.5 text-[13.5px] font-semibold text-ink shadow-soft transition-transform hover:-translate-y-0.5"
@@ -70,6 +99,38 @@ export function Navbar() {
                 {link.label}
               </Link>
             ))}
+
+            {/* ← bloco mobile trocado */}
+            {status === 'authenticated' ? (
+              <>
+                <Link
+                  href="/painel"
+                  onClick={() => setOpen(false)}
+                  className="rounded-lg px-3 py-2.5 text-[15px] font-medium text-ink-soft hover:bg-sand-light hover:text-ink"
+                >
+                  Painel
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    signOut({ callbackUrl: '/' });
+                  }}
+                  className="rounded-lg px-3 py-2.5 text-left text-[15px] font-medium text-ink-soft hover:bg-sand-light hover:text-ink"
+                >
+                  Sair
+                </button>
+              </>
+            ) : status === 'unauthenticated' ? (
+              <Link
+                href="/login"
+                onClick={() => setOpen(false)}
+                className="rounded-lg px-3 py-2.5 text-[15px] font-medium text-ink-soft hover:bg-sand-light hover:text-ink"
+              >
+                Entrar
+              </Link>
+            ) : null}
+
             <Link
               href="/para-lojas"
               onClick={() => setOpen(false)}

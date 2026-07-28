@@ -10,6 +10,7 @@ import type { Store, ProductWithStore } from '@/types';
 export interface StoreRepository {
   getAll(): Promise<Store[]>;
   getById(id: string): Promise<Store | null>;
+  getBySlug(slug: string): Promise<Store | null>;
   getFeatured(limit?: number): Promise<Store[]>;
 }
 

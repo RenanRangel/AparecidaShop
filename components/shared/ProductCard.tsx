@@ -1,6 +1,6 @@
 import { Package } from 'lucide-react';
 import type { ProductWithStore } from '@/types';
-import { cn } from '@/lib/utils';
+import { cn, formatPriceBRL } from '@/lib/utils';
 
 const TONE_BG: Record<ProductWithStore['imageTone'], string> = {
   pine: 'bg-pine-100',
@@ -30,7 +30,7 @@ export function ProductCard({ product }: { product: ProductWithStore }) {
         <p className="mt-1 text-[13px] text-ink-soft">{product.storeName}</p>
         <div className="mt-4 flex items-center justify-between">
           <span className="font-mono text-[14px] font-semibold text-pine-deep">
-            {product.price !== null ? `R$ ${product.price.toFixed(2)}` : 'Sob consulta'}
+            {formatPriceBRL(product.price)}
           </span>
           <button
             type="button"

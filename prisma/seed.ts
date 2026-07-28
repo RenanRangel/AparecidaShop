@@ -1,4 +1,4 @@
-import { PrismaClient, StoreStatus } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -65,7 +65,7 @@ async function main() {
       coverTone:
         "pine",
       status:
-        StoreStatus.APPROVED,
+        "APPROVED",
       isVerified:
         true,
 

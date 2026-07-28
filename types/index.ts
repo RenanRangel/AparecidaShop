@@ -1,6 +1,7 @@
 export type { StoreCategory } from '@/lib/constants/categories';
 
 export interface Store {
+  slug: any;
   id: string;
   name: string;
   category: string;

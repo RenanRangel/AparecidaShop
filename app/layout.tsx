@@ -23,9 +23,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
-        <Navbar />
+      
         <main>
-          <Providers>{children}</Providers>
+          <Providers>
+            <Navbar/>
+            {children}
+            </Providers>
           </main>
         <Footer />
       </body>

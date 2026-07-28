@@ -3,12 +3,12 @@ import { PrismaProductRepository } from './prisma/product.repository';
 import type { StoreRepository, ProductRepository } from './types';
 
 
-export const storeRepository: StoreRepository =
-  new PrismaStoreRepository();
+export const storeRepository =
+  new PrismaStoreRepository() as StoreRepository;
 
 
-export const productRepository: ProductRepository =
-  new PrismaProductRepository();
+export const productRepository = 
+  new PrismaProductRepository() as ProductRepository;
 
 
 export type {

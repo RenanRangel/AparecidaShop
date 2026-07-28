@@ -12,7 +12,7 @@ import {
 import { Container } from '@/components/shared/Container';
 import { ProductCard } from '@/components/shared/ProductCard';
 import { storeRepository, productRepository } from '@/lib/repositories';
-import { cn, formatPhoneDisplay } from '@/lib/utils';
+import { cn, formatPhoneDisplay, normalizePhoneDigits } from '@/lib/utils';
 
 const TONE_STYLES = {
   pine: 'bg-pine text-bg',
@@ -114,7 +114,7 @@ export default async function StorePage({ params }: { params: { storeId: string 
 
               {store.whatsapp && (
                 <a
-                  href={`https://wa.me/${store.whatsapp}`}
+                  href={`https://wa.me/${normalizePhoneDigits(store.whatsapp)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mt-3 flex items-center gap-2 text-[13.5px] font-semibold text-pine hover:underline"

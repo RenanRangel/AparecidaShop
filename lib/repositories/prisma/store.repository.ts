@@ -7,6 +7,8 @@ function mapStore(store: any): Store {
   return {
     id: store.id,
 
+    slug: store.slug,
+
     name: store.name,
 
     category:
@@ -35,6 +37,9 @@ function mapStore(store: any): Store {
 
 
 export class PrismaStoreRepository implements StoreRepository {
+  getBySlug(slug: string): Promise<Store | null> {
+    throw new Error("Method not implemented.");
+  }
 
 
   async getAll(): Promise<Store[]> {

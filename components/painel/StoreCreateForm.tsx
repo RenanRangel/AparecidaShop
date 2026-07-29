@@ -1,8 +1,12 @@
 'use client';
 
 import { useFormState, useFormStatus } from 'react-dom';
-import type { Category } from '@prisma/client';
 import { createStore, type CreateStoreState } from '@/app/painel/cadastrar-loja/actions';
+
+interface Category {
+  id: string;
+  name: string;
+}
 
 const initialState: CreateStoreState = {};
 

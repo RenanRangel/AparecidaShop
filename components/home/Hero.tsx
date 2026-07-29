@@ -1,17 +1,13 @@
 import Link from 'next/link';
-import { ArrowRight, Search, Gift, Shirt, Coffee, Gem, Palette, Store } from 'lucide-react';
+import { ArrowRight, Search } from 'lucide-react';
 import { Container } from '@/components/shared/Container';
+import { HeroStoreShowcase } from './HeroStoreShowcase';
+import { storeRepository } from '@/lib/repositories';
 
-const BOARD_TAGS = [
-  { label: 'Loja São Francisco', icon: Store, rotate: '-rotate-2', tone: 'bg-pine text-bg' },
-  { label: 'Casa do Romeiro', icon: Gift, rotate: 'rotate-1', tone: 'bg-marigold text-ink' },
-  { label: 'Ateliê Mantiqueira', icon: Palette, rotate: '-rotate-1', tone: 'bg-bg text-ink border border-sand' },
-  { label: 'Doceria do Vale', icon: Coffee, rotate: 'rotate-2', tone: 'bg-pine-deep text-bg' },
-  { label: 'Moda Serra', icon: Shirt, rotate: '-rotate-1', tone: 'bg-bg text-ink border border-sand' },
-  { label: 'Bazar Caminho de Luz', icon: Gem, rotate: 'rotate-1', tone: 'bg-marigold-light text-ink' },
-];
+export async function Hero() {
+  // getAll() já filtra status: "APPROVED" no repositório.
+  const stores = await storeRepository.getAll();
 
-export function Hero() {
   return (
     <section className="relative overflow-hidden pb-20 pt-16 sm:pb-28 sm:pt-24">
       <Container className="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
@@ -37,7 +33,7 @@ export function Hero() {
             <a
               href="#busca"
               className="inline-flex items-center gap-2 rounded-full border border-sand bg-white px-6 py-3.5 text-[14.5px] font-semibold text-ink transition-colors hover:border-pine hover:text-pine"
-            >
+            > 
               <Search size={16} />
               Pesquisar produtos
             </a>
@@ -45,29 +41,7 @@ export function Hero() {
         </div>
 
         {/* Elemento-assinatura: mural de placas do comércio local */}
-        <div className="relative">
-          <div className="absolute -inset-6 -z-10 rounded-[2rem] bg-pine-50" aria-hidden />
-          <div className="rounded-[1.75rem] border border-sand bg-white p-7 shadow-card sm:p-9">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-soft">
-              Vitrine do comércio · Aparecida-SP
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3.5">
-              {BOARD_TAGS.map(({ label, icon: Icon, rotate, tone }) => (
-                <span
-                  key={label}
-                  className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2.5 text-[13px] font-semibold shadow-soft ${rotate} ${tone}`}
-                >
-                  <Icon size={15} />
-                  {label}
-                </span>
-              ))}
-            </div>
-            <div className="mt-7 flex items-center justify-between border-t border-sand pt-5">
-              <span className="text-[13px] text-ink-soft">+6 lojas já cadastradas</span>
-              <span className="font-mono text-[12px] font-semibold text-pine">em crescimento</span>
-            </div>
-          </div>
-        </div>
+        <HeroStoreShowcase stores={stores} />
       </Container>
     </section>
   );

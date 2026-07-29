@@ -6,6 +6,7 @@ import type { StoreRepository } from "../types";
 function mapStore(store: any): Store {
   return {
     id: store.id,
+
     slug: store.slug,
 
     name: store.name,
@@ -36,8 +37,30 @@ function mapStore(store: any): Store {
 
 
 export class PrismaStoreRepository implements StoreRepository {
-  getBySlug(slug: string): Promise<Store | null> {
-    throw new Error("Method not implemented.");
+
+  async getBySlug(slug: string): Promise<Store | null> {
+
+    const store = await prisma.store.findUnique({
+
+      where: {
+        slug
+      },
+
+      include: {
+        categories: {
+          include: {
+            category: true
+          }
+        }
+      }
+
+    });
+
+    if (!store)
+      return null;
+
+    return mapStore(store);
+
   }
 
 
@@ -100,13 +123,31 @@ export class PrismaStoreRepository implements StoreRepository {
 
 
 
-  async getFeatured(limit=3):Promise<Store[]>{
+  async getFeatured(limit = 3): Promise<Store[]> {
 
-    const stores = await this.getAll();
+    const stores = await prisma.store.findMany({
 
-    return stores
-      .filter(store=>store.featured)
-      .slice(0,limit);
+      where: {
+        status: "APPROVED"
+      },
+
+      include: {
+        categories: {
+          include: {
+            category: true
+          }
+        }
+      },
+
+      orderBy: {
+        createdAt: "desc"
+      },
+
+      take: limit
+
+    });
+
+    return stores.map(mapStore);
 
   }
 

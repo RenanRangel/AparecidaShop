@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import type { Store } from '@/types';
 
-const VISIBLE_COUNT = 6;
+const VISIBLE_COUNT = 3;
 const ROTATION_INTERVAL_MS = 6000;
 const TRANSITION_MS = 400;
 

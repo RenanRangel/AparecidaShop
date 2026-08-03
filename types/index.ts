@@ -28,12 +28,14 @@ export interface Product {
   description?: string;
 
   storeId: string;
+  categoryId: string; // ← novo — necessário pro <select> de edição
 
   price: number | null;
 
   imageTone: "pine" | "marigold" | "sand";
 
   category: string;
+  status: "ACTIVE" | "INACTIVE"; // ← novo
 }
 
 export interface ProductWithStore extends Product {

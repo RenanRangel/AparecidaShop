@@ -1,19 +1,22 @@
 import { prisma } from "@/lib/prisma";
 import type { ProductWithStore } from "@/types";
-import type { ProductRepository } from "../types";
+import type { ProductRepository, CreateProductInput, UpdateProductInput } from "../types";
 
 
 function mapProduct(product: any): ProductWithStore {
   return {
     id: product.id,
     name: product.name,
+    description: product.description ?? undefined,
     storeId: product.storeId,
+    categoryId: product.categoryId,
 
     price: product.price,
 
     imageTone: "sand",
 
     category: product.category?.name ?? "Sem categoria",
+    status: product.status,
 
     storeName: product.store?.name ?? "Loja não encontrada",
   };
@@ -91,6 +94,10 @@ implements ProductRepository {
         include:{
           store:true,
           category:true,
+        },
+
+        orderBy:{
+          createdAt:"desc"
         }
 
       });
@@ -180,6 +187,57 @@ implements ProductRepository {
 
 
     return products.map(mapProduct);
+
+  }
+
+
+  async create(input: CreateProductInput): Promise<ProductWithStore> {
+
+    const product = await prisma.product.create({
+      data: {
+        name: input.name,
+        description: input.description || null,
+        price: input.price,
+        storeId: input.storeId,
+        categoryId: input.categoryId,
+      },
+      include: { store: true, category: true },
+    });
+
+    return mapProduct(product);
+
+  }
+
+
+  // update/delete usam updateMany/deleteMany com { id, storeId } no where —
+  // não é possível um lojista alterar produto de outra loja mesmo que
+  // manipule o id na URL/form, porque a query só afeta linha nenhuma se o
+  // storeId não bater (count = 0 → devolve null/false).
+  async update(id: string, storeId: string, input: UpdateProductInput): Promise<ProductWithStore | null> {
+
+    const result = await prisma.product.updateMany({
+      where: { id, storeId },
+      data: {
+        ...(input.name !== undefined && { name: input.name }),
+        ...(input.description !== undefined && { description: input.description || null }),
+        ...(input.categoryId !== undefined && { categoryId: input.categoryId }),
+        ...(input.price !== undefined && { price: input.price }),
+        ...(input.status !== undefined && { status: input.status }),
+      },
+    });
+
+    if (result.count === 0) return null;
+
+    return this.getById(id);
+
+  }
+
+
+  async delete(id: string, storeId: string): Promise<boolean> {
+
+    const result = await prisma.product.deleteMany({ where: { id, storeId } });
+
+    return result.count > 0;
 
   }
 

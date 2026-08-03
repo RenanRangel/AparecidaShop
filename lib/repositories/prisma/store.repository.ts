@@ -37,8 +37,25 @@ function mapStore(store: any): Store {
 
 
 export class PrismaStoreRepository implements StoreRepository {
-  getStoreForUser(id: string) {
-      throw new Error('Method not implemented.');
+  async getStoreForUser(userId: string): Promise<Store | null> {
+    const membership = await prisma.storeMember.findFirst({
+      where: { userId },
+      include: {
+        store: {
+          include: {
+            categories: {
+              include: {
+                category: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!membership) return null;
+
+    return mapStore(membership.store);
   }
 
   async getBySlug(slug: string): Promise<Store | null> {

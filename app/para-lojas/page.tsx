@@ -166,22 +166,6 @@ export default function ParaLojasPage() {
         </Container>
       </section>
 
-      <section className="bg-pine-50/50 py-16 sm:py-24">
-        <Container>
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="font-display text-[26px] font-semibold tracking-tight text-ink sm:text-[30px]">
-              Solicite o cadastro da sua loja
-            </h2>
-            <p className="mt-3 text-[15px] text-ink-soft">
-              Preencha o formulário abaixo. Nossa equipe entra em contato para concluir o
-              cadastro e publicar sua vitrine.
-            </p>
-          </div>
-          <div className="mx-auto mt-10 max-w-3xl">
-            <StoreRegistrationForm />
-          </div>
-        </Container>
-      </section>
     </>
   );
 }

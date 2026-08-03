@@ -3,6 +3,7 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { Container } from "@/components/shared/Container";
+import { PainelTabs } from "@/components/painel/PainelTabs";
 
 const STATUS_LABEL: Record<string, { label: string; className: string }> = {
   PENDING: { label: "🟡 Em análise", className: "bg-marigold-light text-marigold-dark" },
@@ -14,7 +15,7 @@ const STATUS_LABEL: Record<string, { label: string; className: string }> = {
 export default async function PainelPage() {
   const session = await auth();
 
-  if (!session?.user) return null; // o middleware já barra isso antes; é só defensivo
+  if (!session?.user) return null;
 
   const membership = await prisma.storeMember.findFirst({
     where: { userId: session.user.id },
@@ -30,6 +31,8 @@ export default async function PainelPage() {
         <h1 className="font-display text-[28px] font-semibold text-ink">
           Olá, {session.user.name}
         </h1>
+
+        {membership && <PainelTabs />}
 
         {!membership ? (
           <div className="mt-8 rounded-2xl border border-dashed border-sand bg-white p-8 text-center">
@@ -57,14 +60,18 @@ export default async function PainelPage() {
               </span>
             </div>
 
-            <div className="rounded-2xl border border-sand bg-white p-6">
+            <Link
+              href="/painel/produtos"
+              className="rounded-2xl border border-sand bg-white p-6 transition-colors hover:border-pine"
+            >
               <span className="text-[12px] font-semibold uppercase tracking-wide text-ink-soft">
                 Produtos
               </span>
               <p className="mt-2 font-display text-[28px] font-semibold text-ink">
                 {membership.store._count.products}
               </p>
-            </div>
+              <p className="mt-1 text-[12px] font-semibold text-pine">Gerenciar produtos →</p>
+            </Link>
 
             <div className="rounded-2xl border border-sand bg-white p-6">
               <span className="text-[12px] font-semibold uppercase tracking-wide text-ink-soft">

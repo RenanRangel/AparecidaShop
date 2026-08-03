@@ -7,6 +7,8 @@ import { productRepository } from '@/lib/repositories';
 import { Container } from '@/components/shared/Container';
 import { formatPriceBRL } from '@/lib/utils';
 import { DeleteProductButton } from '@/components/painel/DeleteProductButton';
+import { PainelTabs } from '@/components/painel/PainelTabs';
+
 
 export const dynamic = 'force-dynamic';
 
@@ -32,6 +34,8 @@ export default async function PainelProdutosPage() {
             Novo produto
           </Link>
         </div>
+
+        <PainelTabs />
 
         {products.length === 0 ? (
           <p className="mt-8 text-[14.5px] text-ink-soft">

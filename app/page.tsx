@@ -3,6 +3,8 @@ import { SearchSection } from '@/components/home/SearchSection';
 import { FeaturedStores } from '@/components/home/FeaturedStores';
 import { productRepository } from '@/lib/repositories';
 
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   const popularProducts = await productRepository.getPopular(4);
 

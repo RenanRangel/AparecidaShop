@@ -14,16 +14,13 @@ import { ProductCard } from '@/components/shared/ProductCard';
 import { storeRepository, productRepository } from '@/lib/repositories';
 import { cn, formatPhoneDisplay, normalizePhoneDigits } from '@/lib/utils';
 
+export const dynamic = 'force-dynamic';
+
 const TONE_STYLES = {
   pine: 'bg-pine text-bg',
   marigold: 'bg-marigold text-ink',
   sand: 'bg-sand text-ink',
 } as const;
-
-export async function generateStaticParams() {
-  const stores = await storeRepository.getAll();
-  return stores.map((store) => ({ storeId: store.id }));
-}
 
 export async function generateMetadata({
   params,

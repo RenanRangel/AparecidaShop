@@ -4,30 +4,19 @@ import type { ProductRepository } from "../types";
 
 
 function mapProduct(product: any): ProductWithStore {
-
   return {
     id: product.id,
-
     name: product.name,
-
     storeId: product.storeId,
 
-    price:
-      product.price !== null
-        ? product.price / 100
-        : null,
+    price: product.price,
 
     imageTone: "sand",
 
-    category:
-      product.category?.name ??
-      "Sem categoria",
+    category: product.category?.name ?? "Sem categoria",
 
-    storeName:
-      product.store?.name ??
-      "Loja não encontrada",
+    storeName: product.store?.name ?? "Loja não encontrada",
   };
-
 }
 
 

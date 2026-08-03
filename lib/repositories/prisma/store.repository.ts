@@ -37,6 +37,9 @@ function mapStore(store: any): Store {
 
 
 export class PrismaStoreRepository implements StoreRepository {
+  getStoreForUser(id: string) {
+      throw new Error('Method not implemented.');
+  }
 
   async getBySlug(slug: string): Promise<Store | null> {
 

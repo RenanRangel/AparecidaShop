@@ -108,7 +108,6 @@ async function main() {
   console.log("Seed executado com sucesso!");
 }
 
-
 main()
 .then(async()=>{
 

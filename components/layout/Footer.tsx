@@ -27,7 +27,7 @@ export function Footer() {
           <ul className="mt-4 flex flex-col gap-2.5 text-[14px] text-ink-soft">
             <li><Link href="/" className="hover:text-ink">Início</Link></li>
             <li><Link href="/lojas" className="hover:text-ink">Lojas</Link></li>
-            <li><Link href="/sobre" className="hover:text-ink">Sobre Mim</Link></li>
+            <li><Link href="/sobre" className="hover:text-ink">Sobre</Link></li>
           </ul>
         </div>
 

@@ -25,9 +25,9 @@ const TONE_STYLES = {
 export async function generateMetadata({
   params,
 }: {
-  params: { storeId: string };
+  params: { storeSlug: string };
 }): Promise<Metadata> {
-  const store = await storeRepository.getById(params.storeId);
+  const store = await storeRepository.getBySlug(params.storeSlug);
   if (!store) return { title: 'Loja não encontrada — AparecidaShop' };
   return {
     title: `${store.name} — AparecidaShop`,
@@ -35,8 +35,8 @@ export async function generateMetadata({
   };
 }
 
-export default async function StorePage({ params }: { params: { storeId: string } }) {
-  const store = await storeRepository.getById(params.storeId);
+export default async function StorePage({ params }: { params: { storeSlug: string } }) {
+  const store = await storeRepository.getBySlug(params.storeSlug);
   if (!store) notFound();
 
   const products = await productRepository.getByStoreId(store.id);

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { registerUser } from "./actions";
-import { Link } from "lucide-react";
+import Link from "next/link";
 
 export default function CadastroPage() {
   const router = useRouter();

@@ -1,8 +1,3 @@
-#5 — README atualizado
-
-Vou escrever um README que reflete o projeto real de hoje — Postgres, Prisma, autenticação, painel do lojista — em vez da versão "só mockado" que estava lá. Substitui o README.md inteiro por este:
-
-markdown
 # AparecidaShop
 
 Vitrine digital para o comércio local de Aparecida-SP: visitantes descobrem lojas e produtos

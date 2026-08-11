@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { Menu, X, MapPin, User } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react'; // ← novo import
 import { Container } from '@/components/shared/Container';
+import { Heart } from 'lucide-react'; // ← junto dos outros ícones já importados
+import { useProductList } from '@/components/list/ListProvider'; // ← novo
 
 const LINKS = [
   { href: '/', label: 'Início' },
@@ -14,7 +16,8 @@ const LINKS = [
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
-  const { data: session, status } = useSession(); // ← novo
+  const { data: session, status } = useSession();
+  const { items } = useProductList();
 
   return (
     <header className="sticky top-0 z-50 border-b border-sand bg-bg/90 backdrop-blur-md">
@@ -44,13 +47,25 @@ export function Navbar() {
         <div className="hidden items-center gap-4 md:flex">
           {status === 'authenticated' ? (
             <>
-              <Link
-                href="/painel"
-                className="flex items-center gap-1.5 text-[14px] font-medium text-ink-soft transition-colors hover:text-ink"
+            <Link
+  href="/lista"
+  className="relative flex items-center gap-1.5 text-[14px] font-medium text-ink-soft transition-colors hover:text-ink"
+>
+  <Heart size={15} />
+  Minha lista
+  {items.length > 0 && (
+    <span className="absolute -right-2.5 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-marigold text-[10px] font-bold text-ink">
+      {items.length}
+    </span>
+  )}
+</Link>
+             <Link
+              href={session?.user?.role === 'ADMIN' ? '/admin' : '/painel'}
+              className="flex items-center gap-1.5 text-[14px] font-medium text-ink-soft transition-colors hover:text-ink"
               >
-                <User size={15} />
-                Painel
-              </Link>
+               <User size={15} />
+              Painel
+            </Link>
               <button
                 type="button"
                 onClick={() => signOut({ callbackUrl: '/' })}
@@ -103,8 +118,16 @@ export function Navbar() {
             {/* ← bloco mobile trocado */}
             {status === 'authenticated' ? (
               <>
+              <Link
+  href="/lista"
+  onClick={() => setOpen(false)}
+  className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-[15px] font-medium text-ink-soft hover:bg-sand-light hover:text-ink"
+>
+  <Heart size={16} />
+  Minha lista {items.length > 0 && `(${items.length})`}
+</Link>
                 <Link
-                  href="/painel"
+                  href={session?.user?.role === 'ADMIN' ? '/admin' : '/painel'}
                   onClick={() => setOpen(false)}
                   className="rounded-lg px-3 py-2.5 text-[15px] font-medium text-ink-soft hover:bg-sand-light hover:text-ink"
                 >

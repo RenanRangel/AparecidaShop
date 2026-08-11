@@ -40,4 +40,5 @@ export interface Product {
 
 export interface ProductWithStore extends Product {
   storeName: string;
+  storeWhatsapp?: string;
 }

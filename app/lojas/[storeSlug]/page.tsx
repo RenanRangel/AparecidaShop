@@ -13,6 +13,9 @@ import { Container } from '@/components/shared/Container';
 import { ProductCard } from '@/components/shared/ProductCard';
 import { storeRepository, productRepository } from '@/lib/repositories';
 import { cn, formatPhoneDisplay, normalizePhoneDigits } from '@/lib/utils';
+import { TrackStoreView } from '@/components/analytics/TrackStoreView';
+import { StoreWhatsAppLink } from '@/components/analytics/StoreWhatsAppLink';
+
 
 export const dynamic = 'force-dynamic';
 
@@ -43,6 +46,8 @@ export default async function StorePage({ params }: { params: { storeSlug: strin
   const mapQuery = encodeURIComponent(`${store.name}, ${store.location}`);
 
   return (
+    <>
+    <TrackStoreView storeId={store.id} />
     <section className="py-16 sm:py-24">
       <Container>
         <Link
@@ -110,15 +115,7 @@ export default async function StorePage({ params }: { params: { storeSlug: strin
               </p>
 
               {store.whatsapp && (
-                <a
-                  href={`https://wa.me/${normalizePhoneDigits(store.whatsapp)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-3 flex items-center gap-2 text-[13.5px] font-semibold text-pine hover:underline"
-                >
-                  <MessageCircle size={15} />
-                  {formatPhoneDisplay(store.whatsapp)}
-                </a>
+                <StoreWhatsAppLink storeId={store.id} whatsapp={store.whatsapp} />
               )}
 
               {store.instagram && (
@@ -158,5 +155,6 @@ export default async function StorePage({ params }: { params: { storeSlug: strin
         </div>
       </Container>
     </section>
+    </>
   );
 }

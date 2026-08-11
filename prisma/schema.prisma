@@ -28,6 +28,35 @@ enum UserRole {
   VISITANTE
 }
 
+enum AnalyticsEventType {
+  STORE_VIEW
+  PRODUCT_VIEW
+  WHATSAPP_CLICK
+  ADD_TO_LIST
+  LIST_WHATSAPP_SENT
+}
+
+// Evento bruto — sem tabela de agregação por enquanto. Pra escala atual do
+// MVP, consultas agregadas (COUNT/GROUP BY) direto nesta tabela são
+// suficientes. Se o volume crescer muito, um job de agregação diária vira
+// a próxima otimização — não precisa disso agora.
+model AnalyticsEvent {
+  id        String             @id @default(cuid())
+  type      AnalyticsEventType
+  store     Store              @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  storeId   String
+  product   Product?           @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productId String?
+  sessionId String             // identificador anônimo (cookie), sem dado pessoal
+  origin    String?            // "página inicial" | "diretório de lojas" | "link externo" | "direto" | etc.
+  createdAt DateTime           @default(now())
+
+  @@index([storeId, type, createdAt])
+  @@index([productId, type, createdAt])
+  @@index([sessionId, type, storeId, createdAt])
+  @@map("analytics_events")
+}
+
 model User {
   id           String   @id @default(cuid())
   name         String
@@ -89,6 +118,7 @@ model Store {
   statusHistory StoreStatusHistory[]
   reviews       Review[]
   favoritedBy   StoreFavorite[]
+  analyticsEvents AnalyticsEvent[]
 
   @@index([status])
   @@map("stores")
@@ -167,6 +197,7 @@ model Product {
 
   images      ProductImage[]
   favoritedBy ProductFavorite[]
+  analyticsEvents AnalyticsEvent[]
 
   @@index([storeId])
   @@index([categoryId])

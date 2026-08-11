@@ -19,6 +19,7 @@ function mapProduct(product: any): ProductWithStore {
     status: product.status,
 
     storeName: product.store?.name ?? "Loja não encontrada",
+    storeWhatsapp: product.store?.whatsapp ?? undefined,
   };
 }
 

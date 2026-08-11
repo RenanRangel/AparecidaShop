@@ -1,6 +1,9 @@
 import { Package } from 'lucide-react';
 import type { ProductWithStore } from '@/types';
 import { cn, formatPriceBRL } from '@/lib/utils';
+import { AddToListButton } from '@/components/list/AddToListButton';
+import { ViewProductButton } from '@/components/analytics/ViewProductButton'; // ← novo import
+
 
 const TONE_BG: Record<ProductWithStore['imageTone'], string> = {
   pine: 'bg-pine-100',
@@ -17,8 +20,11 @@ const TONE_ICON: Record<ProductWithStore['imageTone'], string> = {
 export function ProductCard({ product }: { product: ProductWithStore }) {
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-sand bg-white transition-shadow hover:shadow-card">
-      <div className={cn('flex aspect-square items-center justify-center', TONE_BG[product.imageTone])}>
+      <div className={cn('relative flex aspect-square items-center justify-center', TONE_BG[product.imageTone])}>
         <Package size={30} className={TONE_ICON[product.imageTone]} strokeWidth={1.6} />
+        <div className="absolute right-2.5 top-2.5">
+          <AddToListButton product={product} />
+        </div>
       </div>
       <div className="flex flex-1 flex-col p-4">
         <span className="font-mono text-[10.5px] font-semibold uppercase tracking-wide text-ink-soft">
@@ -32,12 +38,7 @@ export function ProductCard({ product }: { product: ProductWithStore }) {
           <span className="font-mono text-[14px] font-semibold text-pine-deep">
             {formatPriceBRL(product.price)}
           </span>
-          <button
-            type="button"
-            className="rounded-full border border-sand px-3.5 py-1.5 text-[12.5px] font-semibold text-ink transition-colors group-hover:border-pine group-hover:text-pine"
-          >
-            Ver produto
-          </button>
+          <ViewProductButton product={product} /> 
         </div>
       </div>
     </div>

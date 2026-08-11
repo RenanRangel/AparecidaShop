@@ -1,9 +1,9 @@
+import Image from 'next/image';
 import { Package } from 'lucide-react';
 import type { ProductWithStore } from '@/types';
 import { cn, formatPriceBRL } from '@/lib/utils';
 import { AddToListButton } from '@/components/list/AddToListButton';
-import { ViewProductButton } from '@/components/analytics/ViewProductButton'; // ← novo import
-
+import { ViewProductButton } from '@/components/analytics/ViewProductButton';
 
 const TONE_BG: Record<ProductWithStore['imageTone'], string> = {
   pine: 'bg-pine-100',
@@ -18,10 +18,22 @@ const TONE_ICON: Record<ProductWithStore['imageTone'], string> = {
 };
 
 export function ProductCard({ product }: { product: ProductWithStore }) {
+  const coverImage = product.images.find((img) => img.isCover) ?? product.images[0];
+
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-sand bg-white transition-shadow hover:shadow-card">
       <div className={cn('relative flex aspect-square items-center justify-center', TONE_BG[product.imageTone])}>
-        <Package size={30} className={TONE_ICON[product.imageTone]} strokeWidth={1.6} />
+        {coverImage ? (
+          <Image
+            src={coverImage.url}
+            alt={product.name}
+            fill
+            className="object-cover"
+            sizes="(max-width: 640px) 50vw, 25vw"
+          />
+        ) : (
+          <Package size={30} className={TONE_ICON[product.imageTone]} strokeWidth={1.6} />
+        )}
         <div className="absolute right-2.5 top-2.5">
           <AddToListButton product={product} />
         </div>
@@ -38,7 +50,7 @@ export function ProductCard({ product }: { product: ProductWithStore }) {
           <span className="font-mono text-[14px] font-semibold text-pine-deep">
             {formatPriceBRL(product.price)}
           </span>
-          <ViewProductButton product={product} /> 
+          <ViewProductButton product={product} />
         </div>
       </div>
     </div>

@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { productRepository } from '@/lib/repositories';
+import { uploadProductImage, deleteBlobImage } from '@/lib/blob';
 
 export interface ProductFormState {
   errors?: Record<string, string>;
@@ -54,16 +55,9 @@ export async function createProduct(
 
   if (Object.keys(errors).length > 0) return { errors };
 
-  await productRepository.create({
-    storeId,
-    categoryId,
-    name,
-    description: description || undefined,
-    price,
-  });
-
+  const created = await productRepository.create({ storeId, categoryId, name, description: description || undefined, price });
   revalidatePath('/painel/produtos');
-  redirect('/painel/produtos');
+  redirect(`/painel/produtos/${created.id}/editar`);
 }
 
 export async function updateProduct(
@@ -117,4 +111,92 @@ export async function deleteProduct(productId: string): Promise<void> {
 
   await productRepository.delete(productId, storeId);
   revalidatePath('/painel/produtos');
+}
+
+export async function uploadImage(
+  productId: string,
+  formData: FormData,
+): Promise<{ error?: string }> {
+  const session = await auth();
+  if (!session?.user) redirect('/login');
+
+  const storeId = await getOwnedStoreId(session.user.id);
+  if (!storeId) redirect('/painel');
+
+  const product = await prisma.product.findFirst({ where: { id: productId, storeId } });
+  if (!product) return { error: 'Produto não encontrado.' };
+
+  const file = formData.get('image');
+  if (!(file instanceof File) || file.size === 0) {
+    return { error: 'Selecione uma imagem.' };
+  }
+  const result = await uploadProductImage(file, productId);
+  if (result.error || typeof result.url !== 'string') {
+    return { error: result.error ?? 'Falha ao enviar imagem.' };
+  }
+
+  const existingCount = await prisma.productImage.count({ where: { productId } });
+
+  await prisma.productImage.create({
+    data: {
+      productId,
+      url: result.url,
+      position: existingCount,
+      isCover: existingCount === 0, // a primeira imagem já nasce como capa
+    },
+  });
+
+  revalidatePath('/painel/produtos');
+  revalidatePath(`/painel/produtos/${productId}/editar`);
+  return {};
+}
+
+export async function deleteImage(imageId: string): Promise<void> {
+  const session = await auth();
+  if (!session?.user) redirect('/login');
+
+  const storeId = await getOwnedStoreId(session.user.id);
+  if (!storeId) redirect('/painel');
+
+  const image = await prisma.productImage.findFirst({
+    where: { id: imageId, product: { storeId } },
+  });
+  if (!image) return;
+
+  await prisma.productImage.delete({ where: { id: imageId } });
+  await deleteBlobImage(image.url);
+
+  // Se a imagem apagada era a capa, promove a próxima (se houver alguma) a capa.
+  if (image.isCover) {
+    const next = await prisma.productImage.findFirst({
+      where: { productId: image.productId },
+      orderBy: { position: 'asc' },
+    });
+    if (next) {
+      await prisma.productImage.update({ where: { id: next.id }, data: { isCover: true } });
+    }
+  }
+
+  revalidatePath('/painel/produtos');
+  revalidatePath(`/painel/produtos/${image.productId}/editar`);
+}
+
+export async function setCoverImage(imageId: string): Promise<void> {
+  const session = await auth();
+  if (!session?.user) redirect('/login');
+
+  const storeId = await getOwnedStoreId(session.user.id);
+  if (!storeId) redirect('/painel');
+
+  const image = await prisma.productImage.findFirst({
+    where: { id: imageId, product: { storeId } },
+  });
+  if (!image) return;
+
+  await prisma.$transaction([
+    prisma.productImage.updateMany({ where: { productId: image.productId }, data: { isCover: false } }),
+    prisma.productImage.update({ where: { id: imageId }, data: { isCover: true } }),
+  ]);
+
+  revalidatePath(`/painel/produtos/${image.productId}/editar`);
 }

@@ -20,6 +20,10 @@ function mapProduct(product: any): ProductWithStore {
 
     storeName: product.store?.name ?? "Loja não encontrada",
     storeWhatsapp: product.store?.whatsapp ?? undefined,
+    images: (product.images ?? [])
+  .slice()
+  .sort((a: any, b: any) => a.position - b.position)
+  .map((img: any) => ({ id: img.id, url: img.url, isCover: img.isCover })),
   };
 }
 
@@ -37,6 +41,7 @@ implements ProductRepository {
         include:{
           store:true,
           category:true,
+          images: true
         },
 
         orderBy:{
@@ -66,6 +71,7 @@ implements ProductRepository {
         include:{
           store:true,
           category:true,
+          images: true
         }
 
       });
@@ -95,6 +101,7 @@ implements ProductRepository {
         include:{
           store:true,
           category:true,
+          images: true
         },
 
         orderBy:{
@@ -122,6 +129,7 @@ implements ProductRepository {
         include:{
           store:true,
           category:true,
+          images: true
         },
 
         orderBy:{
@@ -182,6 +190,7 @@ implements ProductRepository {
         include:{
           store:true,
           category:true,
+          images: true
         }
 
       });
@@ -202,7 +211,7 @@ implements ProductRepository {
         storeId: input.storeId,
         categoryId: input.categoryId,
       },
-      include: { store: true, category: true },
+      include: { store: true, category: true, images: true },
     });
 
     return mapProduct(product);

@@ -4,6 +4,7 @@ import { useFormState, useFormStatus } from 'react-dom';
 import type { Category } from '@prisma/client';
 import type { ProductWithStore } from '@/types';
 import { createProduct, updateProduct, type ProductFormState } from '@/app/painel/produtos/actions';
+import { ProductImageManager } from '@/components/painel/ProductImageManager'; 
 
 const initialState: ProductFormState = {};
 
@@ -80,6 +81,10 @@ export function ProductForm({
           />
         </Field>
       </div>
+
+      {product && (
+        <ProductImageManager productId={product.id} images={product.images} />
+      )}
 
       {product && (
         <Field label="Status">

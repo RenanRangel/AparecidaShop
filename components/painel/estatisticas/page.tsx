@@ -5,7 +5,15 @@ import { Container } from '@/components/shared/Container';
 import { PainelTabs } from '@/components/painel/PainelTabs';
 import { PeriodSelector } from '@/components/painel/PeriodSelector';
 import { MetricCard } from '@/components/painel/MetricCard';
-import { getStoreAnalyticsSummary, type PeriodKey } from '@/lib/analytics/query';
+import { getStoreAnalyticsSummary, getStoreTimeSeries,  type PeriodKey } from '@/lib/analytics/query';
+import { EvolutionChart } from '@/components/painel/EvolutionChart';
+import { getStoreFunnel, getProductRanking } from '@/lib/analytics/query';
+import { InterestFunnel } from '@/components/painel/InterestFunnel';
+import { ProductRanking } from '@/components/painel/ProductRanking';
+import { getStoreOriginBreakdown, getEstimatedListValue, getCatalogSummary } from '@/lib/analytics/query';
+import { OriginBreakdown } from '@/components/painel/OriginBreakdown';
+import { CatalogSummaryCard } from '@/components/painel/CatalogSummaryCard';
+import { EstimatedListValueCard } from '@/components/painel/EstimatedListValueCard';
 
 export const dynamic = 'force-dynamic';
 
@@ -27,6 +35,16 @@ export default async function EstatisticasPage({
     : '30d';
 
   const summary = await getStoreAnalyticsSummary(membership.storeId, period);
+
+  const timeSeries = await getStoreTimeSeries(membership.storeId, period);
+
+  const [funnel, ranking, origins, estimatedValue, catalog] = await Promise.all([
+    getStoreFunnel(membership.storeId, period),
+    getProductRanking(membership.storeId, period),
+    getStoreOriginBreakdown(membership.storeId, period),
+  getEstimatedListValue(membership.storeId, period),
+  getCatalogSummary(membership.storeId),
+  ]);
 
   return (
     <section className="py-16 sm:py-24">
@@ -64,6 +82,18 @@ export default async function EstatisticasPage({
                 : 'dos visitantes chegaram ao WhatsApp'
             }
           />
+        </div>
+        <div className="mt-6">
+          <EvolutionChart series={timeSeries} />
+        </div>
+        <div className="mt-6 grid gap-5 lg:grid-cols-2">
+          <InterestFunnel stages={funnel} />
+          <ProductRanking entries={ranking} />
+        </div>
+        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <OriginBreakdown origins={origins} />
+          <CatalogSummaryCard summary={catalog} />
+          <EstimatedListValueCard cents={estimatedValue} />
         </div>
       </Container>
     </section>

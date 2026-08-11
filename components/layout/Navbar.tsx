@@ -2,16 +2,15 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, MapPin, User } from 'lucide-react';
-import { useSession, signOut } from 'next-auth/react'; // ← novo import
+import { Menu, X, MapPin, User, Heart } from 'lucide-react';
+import { useSession, signOut } from 'next-auth/react';
 import { Container } from '@/components/shared/Container';
-import { Heart } from 'lucide-react'; // ← junto dos outros ícones já importados
-import { useProductList } from '@/components/list/ListProvider'; // ← novo
+import { useProductList } from '@/components/list/ListProvider';
 
 const LINKS = [
   { href: '/', label: 'Início' },
   { href: '/lojas', label: 'Lojas' },
-  { href: '/sobre', label: 'Sobre' }, // ← "Sobre Mim" → "Sobre"
+  { href: '/sobre', label: 'Sobre' },
 ];
 
 export function Navbar() {
@@ -43,29 +42,30 @@ export function Navbar() {
           ))}
         </nav>
 
-        {/* ← bloco desktop trocado */}
         <div className="hidden items-center gap-4 md:flex">
+          {/* ← "Minha lista" fora da checagem de sessão: aparece pra qualquer visitante */}
+          <Link
+            href="/lista"
+            className="relative flex items-center gap-1.5 text-[14px] font-medium text-ink-soft transition-colors hover:text-ink"
+          >
+            <Heart size={15} />
+            Minha lista
+            {items.length > 0 && (
+              <span className="absolute -right-2.5 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-marigold text-[10px] font-bold text-ink">
+                {items.length}
+              </span>
+            )}
+          </Link>
+
           {status === 'authenticated' ? (
             <>
-            <Link
-  href="/lista"
-  className="relative flex items-center gap-1.5 text-[14px] font-medium text-ink-soft transition-colors hover:text-ink"
->
-  <Heart size={15} />
-  Minha lista
-  {items.length > 0 && (
-    <span className="absolute -right-2.5 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-marigold text-[10px] font-bold text-ink">
-      {items.length}
-    </span>
-  )}
-</Link>
-             <Link
-              href={session?.user?.role === 'ADMIN' ? '/admin' : '/painel'}
-              className="flex items-center gap-1.5 text-[14px] font-medium text-ink-soft transition-colors hover:text-ink"
+              <Link
+                href={session?.user?.role === 'ADMIN' ? '/admin' : '/painel'}
+                className="flex items-center gap-1.5 text-[14px] font-medium text-ink-soft transition-colors hover:text-ink"
               >
-               <User size={15} />
-              Painel
-            </Link>
+                <User size={15} />
+                Painel
+              </Link>
               <button
                 type="button"
                 onClick={() => signOut({ callbackUrl: '/' })}
@@ -81,7 +81,7 @@ export function Navbar() {
             >
               Entrar
             </Link>
-          ) : null /* status === 'loading': não mostra nada pra evitar piscar */}
+          ) : null}
 
           <Link
             href="/para-lojas"
@@ -115,17 +115,18 @@ export function Navbar() {
               </Link>
             ))}
 
-            {/* ← bloco mobile trocado */}
+            {/* ← "Minha lista" fora da checagem de sessão aqui também */}
+            <Link
+              href="/lista"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-[15px] font-medium text-ink-soft hover:bg-sand-light hover:text-ink"
+            >
+              <Heart size={16} />
+              Minha lista {items.length > 0 && `(${items.length})`}
+            </Link>
+
             {status === 'authenticated' ? (
               <>
-              <Link
-  href="/lista"
-  onClick={() => setOpen(false)}
-  className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-[15px] font-medium text-ink-soft hover:bg-sand-light hover:text-ink"
->
-  <Heart size={16} />
-  Minha lista {items.length > 0 && `(${items.length})`}
-</Link>
                 <Link
                   href={session?.user?.role === 'ADMIN' ? '/admin' : '/painel'}
                   onClick={() => setOpen(false)}

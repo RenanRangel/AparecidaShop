@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 const TABS = [
   { href: '/painel', label: 'Visão geral' },
   { href: '/painel/produtos', label: 'Meus produtos' },
+  { href: '/painel/estatisticas', label: 'Estatísticas' },
 ];
 
 export function PainelTabs() {

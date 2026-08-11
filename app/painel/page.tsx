@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { Container } from "@/components/shared/Container";
 import { PainelTabs } from "@/components/painel/PainelTabs";
+import { getStoreAnalyticsSummary } from "@/lib/analytics/query";
 
 const STATUS_LABEL: Record<string, { label: string; className: string }> = {
   PENDING: { label: "🟡 Em análise", className: "bg-marigold-light text-marigold-dark" },
@@ -24,6 +25,11 @@ export default async function PainelPage() {
     },
     orderBy: { createdAt: "asc" },
   });
+
+  // Só busca estatísticas se já existir uma loja — evita query desnecessária.
+  const summary = membership
+    ? await getStoreAnalyticsSummary(membership.storeId, "30d")
+    : null;
 
   return (
     <section className="py-16 sm:py-24">
@@ -73,13 +79,18 @@ export default async function PainelPage() {
               <p className="mt-1 text-[12px] font-semibold text-pine">Gerenciar produtos →</p>
             </Link>
 
-            <div className="rounded-2xl border border-sand bg-white p-6">
+            <Link
+              href="/painel/estatisticas"
+              className="rounded-2xl border border-sand bg-white p-6 transition-colors hover:border-pine"
+            >
               <span className="text-[12px] font-semibold uppercase tracking-wide text-ink-soft">
-                Visualizações
+                Visualizações (últimos 30 dias)
               </span>
-              <p className="mt-2 font-display text-[28px] font-semibold text-ink">—</p>
-              <p className="mt-1 text-[12px] text-ink-soft">Contagem ainda não implementada.</p>
-            </div>
+              <p className="mt-2 font-display text-[28px] font-semibold text-ink">
+                {summary!.storeViews.current.toLocaleString('pt-BR')}
+              </p>
+              <p className="mt-1 text-[12px] font-semibold text-pine">Ver estatísticas →</p>
+            </Link>
           </div>
         )}
       </Container>

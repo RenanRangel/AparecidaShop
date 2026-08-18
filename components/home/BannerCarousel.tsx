@@ -14,20 +14,26 @@ interface Banner {
   gradient: string; // classe Tailwind de background
 }
 
-// Um banner só por enquanto — de propósito, pra validar o estilo antes de
-// produzir mais. O carrossel já está pronto pra receber mais itens aqui.
 const BANNERS: Banner[] = [
-  {
-    id: 'boas-vindas',
-    eyebrow: 'AparecidaShop',
-    title: 'O comércio local de Aparecida, num só lugar',
-    description: 'Descubra lojas, produtos e fale direto com quem vende — sem sair da cidade.',
-    ctaLabel: 'Ver lojas cadastradas',
-    ctaHref: '/lojas',
-    gradient: 'bg-gradient-to-br from-pine via-pine-deep to-[#0D2A21]',
-  },
-];
-
+    {
+      id: 'boas-vindas',
+      eyebrow: 'AparecidaShop',
+      title: 'O comércio local de Aparecida, num só lugar',
+      description: 'Descubra lojas, produtos e fale direto com quem vende — sem sair da cidade.',
+      ctaLabel: 'Ver lojas cadastradas',
+      ctaHref: '/lojas',
+      gradient: 'bg-gradient-to-br from-pine via-pine-deep to-[#0D2A21]',
+    },
+    {
+      id: 'cadastre-loja',
+      eyebrow: 'Para lojistas',
+      title: 'Sua loja visível pra quem já está em Aparecida',
+      description: 'Cadastro gratuito. Apareça pra visitantes buscando exatamente o que você vende.',
+      ctaLabel: 'Cadastrar minha loja',
+      ctaHref: '/cadastro',
+      gradient: 'bg-gradient-to-br from-marigold-dark via-marigold to-[#8C5A16]',
+    },
+  ];
 const AUTOPLAY_MS = 6000;
 
 export function BannerCarousel() {

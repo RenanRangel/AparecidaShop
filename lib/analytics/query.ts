@@ -477,3 +477,7 @@ export async function getCatalogSummary(storeId: string): Promise<CatalogSummary
 
   return { total, active, inactive: total - active };
 }
+
+export async function getProductAddToListCount(productId: string): Promise<number> {
+  return prisma.analyticsEvent.count({ where: { type: 'ADD_TO_LIST', productId } });
+}

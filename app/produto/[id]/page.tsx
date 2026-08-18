@@ -1,27 +1,15 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { ArrowLeft, Package } from 'lucide-react';
+import { ArrowLeft, Heart } from 'lucide-react';
 import { Container } from '@/components/shared/Container';
-import { AddToListButton } from '@/components/list/AddToListButton';
+import { ProductGallery } from '@/components/shared/ProductGallery';
 import { productRepository } from '@/lib/repositories';
-import { formatPriceBRL, normalizePhoneDigits } from '@/lib/utils';
+import { getProductAddToListCount } from '@/lib/analytics/query';
+import { formatPriceBRL } from '@/lib/utils';
 import { StoreWhatsAppLink } from '@/components/analytics/StoreWhatsAppLink';
 
 export const dynamic = 'force-dynamic';
-
-const TONE_BG = {
-  pine: 'bg-pine-100',
-  marigold: 'bg-marigold-light',
-  sand: 'bg-sand-light',
-} as const;
-
-const TONE_ICON = {
-  pine: 'text-pine-deep',
-  marigold: 'text-marigold-dark',
-  sand: 'text-ink-soft',
-} as const;
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const product = await productRepository.getById(params.id);
@@ -37,13 +25,13 @@ export default async function ProductPage({ params }: { params: { id: string } }
   const product = await productRepository.getById(params.id);
   if (!product) notFound();
 
-  const coverImage = product.images.find((img) => img.isCover) ?? product.images[0];
+  const favoriteCount = await getProductAddToListCount(product.id);
 
   return (
     <section className="py-16 sm:py-24">
       <Container>
         <Link
-          href={`/lojas`}
+          href="/lojas"
           className="inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-ink-soft transition-colors hover:text-pine"
         >
           <ArrowLeft size={15} />
@@ -51,25 +39,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
         </Link>
 
         <div className="mt-6 grid gap-10 lg:grid-cols-2">
-          <div
-            className={`relative flex aspect-square items-center justify-center overflow-hidden rounded-2xl border border-sand ${TONE_BG[product.imageTone]}`}
-          >
-            {coverImage ? (
-              <Image
-                src={coverImage.url}
-                alt={product.name}
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                priority
-              />
-            ) : (
-              <Package size={56} className={TONE_ICON[product.imageTone]} strokeWidth={1.4} />
-            )}
-            <div className="absolute right-3 top-3">
-              <AddToListButton product={product} />
-            </div>
-          </div>
+          <ProductGallery product={product} />
 
           <div>
             <span className="font-mono text-[11px] font-semibold uppercase tracking-wide text-pine-deep">
@@ -78,13 +48,19 @@ export default async function ProductPage({ params }: { params: { id: string } }
             <h1 className="mt-2 font-display text-[28px] font-semibold tracking-tight text-ink sm:text-[34px]">
               {product.name}
             </h1>
-            <p className="mt-1.5 inline-block text-[14px] font-medium text-ink-soft transition-colors hover:text-pine">
-              {product.storeName}
-            </p>
+            <p className="mt-1.5 text-[14px] font-medium text-ink-soft">{product.storeName}</p>
 
-            <p className="mt-5 font-mono text-[24px] font-semibold text-pine-deep">
-              {formatPriceBRL(product.price)}
-            </p>
+            <div className="mt-5 flex flex-wrap items-center gap-4">
+              <span className="font-mono text-[24px] font-semibold text-pine-deep">
+                {formatPriceBRL(product.price)}
+              </span>
+              {favoriteCount > 0 && (
+                <span className="inline-flex items-center gap-1.5 text-[13px] text-ink-soft">
+                  <Heart size={14} className="text-marigold-dark" />
+                  {favoriteCount} {favoriteCount === 1 ? 'pessoa adicionou' : 'pessoas adicionaram'} à lista
+                </span>
+              )}
+            </div>
 
             {product.description && (
               <p className="mt-5 text-[14.5px] leading-relaxed text-ink-soft">{product.description}</p>
@@ -98,11 +74,11 @@ export default async function ProductPage({ params }: { params: { id: string } }
             )}
 
             <Link
-              href="/lojas"
+              href={`/lojas/${product.storeSlug}`}
               className="mt-6 inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-pine hover:underline"
             >
               <ArrowLeft size={14} />
-              Ver mais produtos
+              Ver mais produtos de {product.storeName}
             </Link>
           </div>
         </div>

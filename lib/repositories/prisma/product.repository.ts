@@ -5,6 +5,7 @@ import type { ProductRepository, CreateProductInput, UpdateProductInput } from "
 
 function mapProduct(product: any): ProductWithStore {
   return {
+    storeSlug: product.store?.slug ?? '',
     id: product.id,
     name: product.name,
     description: product.description ?? undefined,

@@ -16,10 +16,8 @@ function readOptionalEnv(key: string): string | undefined {
 }
 
 export const env = {
-  /** Uso futuro: string de conexão do PostgreSQL. */
   databaseUrl: readOptionalEnv('DATABASE_URL'),
-  /** Uso futuro: URL base de uma API externa. */
   apiBaseUrl: readOptionalEnv('NEXT_PUBLIC_API_BASE_URL'),
-  /** Uso futuro: segredo usado pela camada de autenticação. */
   authSecret: readOptionalEnv('AUTH_SECRET'),
+  resendApiKey: readOptionalEnv('RESEND_API_KEY'),
 } as const;

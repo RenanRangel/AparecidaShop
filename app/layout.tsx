@@ -27,9 +27,25 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://aparecida-shop.vercel.app'), // ← trocar quando comprar domínio próprio
   title: 'AparecidaShop — comércio local de Aparecida-SP',
   description:
     'Encontre lojas e produtos do comércio local de Aparecida-SP e conecte-se diretamente com os estabelecimentos.',
+  openGraph: {
+    title: 'AparecidaShop — comércio local de Aparecida-SP',
+    description:
+      'Encontre lojas e produtos do comércio local de Aparecida-SP e conecte-se diretamente com os estabelecimentos.',
+    url: 'https://aparecida-shop.vercel.app',
+    siteName: 'AparecidaShop',
+    locale: 'pt_BR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'AparecidaShop — comércio local de Aparecida-SP',
+    description:
+      'Encontre lojas e produtos do comércio local de Aparecida-SP e conecte-se diretamente com os estabelecimentos.',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -1,5 +1,7 @@
 'use server';
 
+import { sendEmail } from '@/lib/email';
+import { storeApprovedEmail, storeRejectedEmail } from '@/lib/email-templates';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
@@ -31,6 +33,16 @@ export async function approveStore(storeId: string): Promise<void> {
     }),
   ]);
 
+  const owner = await prisma.storeMember.findFirst({
+    where: { storeId, role: 'OWNER' },
+    include: { user: true },
+  });
+
+  if (owner?.user.email) {
+    const { subject, html } = storeApprovedEmail(store.name);
+    await sendEmail({ to: owner.user.email, subject, html });
+  }
+
   revalidatePath('/admin/lojas');
 }
 
@@ -52,6 +64,16 @@ export async function rejectStore(storeId: string, reason: string): Promise<void
       },
     }),
   ]);
+
+  const owner = await prisma.storeMember.findFirst({
+    where: { storeId, role: 'OWNER' },
+    include: { user: true },
+  });
+
+  if (owner?.user.email) {
+    const { subject, html } = storeRejectedEmail(store.name, reason);
+    await sendEmail({ to: owner.user.email, subject, html });
+  }
 
   revalidatePath('/admin/lojas');
 }

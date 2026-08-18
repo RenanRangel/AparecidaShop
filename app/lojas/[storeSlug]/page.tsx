@@ -32,9 +32,24 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const store = await storeRepository.getBySlug(params.storeSlug);
   if (!store) return { title: 'Loja não encontrada — AparecidaShop' };
+
+  const title = `${store.name} — AparecidaShop`;
+  const description = store.description;
+
   return {
-    title: `${store.name} — AparecidaShop`,
-    description: store.description,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      locale: 'pt_BR',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
   };
 }
 

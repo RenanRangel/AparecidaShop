@@ -31,6 +31,11 @@ function mapStore(store: any): Store {
     instagram: store.instagram ?? undefined,
 
     featured: false,
+
+    shopeeUrl: store.shopeeUrl ?? undefined,
+    mercadoLivreUrl: store.mercadoLivreUrl ?? undefined,
+    tiktokShopUrl: store.tiktokShopUrl ?? undefined,
+
   };
 }
 

@@ -41,3 +41,16 @@ export function slugify(value: string): string {
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-');
 }
+
+/** Identifica a plataforma pelo domínio do link, pra rotular o botão. */
+export function getMarketplaceLabel(url: string): string {
+  try {
+    const hostname = new URL(url).hostname;
+    if (hostname.includes('shopee')) return 'Shopee';
+    if (hostname.includes('mercadolivre') || hostname.includes('mercadolibre')) return 'Mercado Livre';
+    if (hostname.includes('tiktok')) return 'TikTok Shop';
+    return 'Comprar online';
+  } catch {
+    return 'Comprar online';
+  }
+}

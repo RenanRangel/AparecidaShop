@@ -96,12 +96,15 @@ model Store {
   latitude    Float?
   longitude   Float?
 
-  cnpj        String?
+  cnpj        String
   phone       String?
   whatsapp    String?
   email       String?
   instagram   String?
   gallery     String?
+  shopeeUrl   String?
+  mercadoLivreUrl String?
+  tiktokShopUrl   String?
 
   logoInitials String
   coverTone    String     @default("pine")
@@ -190,6 +193,7 @@ model Product {
   name        String
   description String?
   price       Int?          // centavos; null = "sob consulta"
+  externalUrl String?
   status      ProductStatus @default(ACTIVE)
 
   createdAt DateTime @default(now())

@@ -13,7 +13,8 @@ export interface CreateProductInput {
   categoryId: string;
   name: string;
   description?: string;
-  price: number | null; // centavos
+  price: number | null; 
+  externalUrl?: string;
 }
 
 export interface UpdateProductInput {
@@ -22,6 +23,7 @@ export interface UpdateProductInput {
   categoryId?: string;
   price?: number | null;
   status?: 'ACTIVE' | 'INACTIVE';
+  externalUrl?: string;
 }
 
 export interface ProductRepository {

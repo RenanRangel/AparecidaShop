@@ -143,6 +143,25 @@ export default async function StorePage({ params }: { params: { storeSlug: strin
                   <Instagram size={15} />@{store.instagram}
                 </a>
               )}
+                              {(store.shopeeUrl || store.mercadoLivreUrl || store.tiktokShopUrl) && (
+                  <div className="mt-3 flex flex-wrap gap-2 border-t border-sand pt-3">
+                    {store.shopeeUrl && (
+                      <a href={store.shopeeUrl} target="_blank" rel="noopener noreferrer" className="rounded-full border border-sand px-3 py-1.5 text-[12px] font-semibold text-ink-soft hover:border-pine hover:text-pine">
+                        Shopee
+                      </a>
+                    )}
+                    {store.mercadoLivreUrl && (
+                      <a href={store.mercadoLivreUrl} target="_blank" rel="noopener noreferrer" className="rounded-full border border-sand px-3 py-1.5 text-[12px] font-semibold text-ink-soft hover:border-pine hover:text-pine">
+                        Mercado Livre
+                      </a>
+                    )}
+                    {store.tiktokShopUrl && (
+                      <a href={store.tiktokShopUrl} target="_blank" rel="noopener noreferrer" className="rounded-full border border-sand px-3 py-1.5 text-[12px] font-semibold text-ink-soft hover:border-pine hover:text-pine">
+                        TikTok Shop
+                      </a>
+                    )}
+                  </div>
+                )}
             </div>
 
             <div className="rounded-2xl border border-sand bg-white p-5">

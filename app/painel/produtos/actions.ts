@@ -6,6 +6,7 @@ import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { productRepository } from '@/lib/repositories';
 import { uploadProductImage, deleteBlobImage } from '@/lib/blob';
+import { isValidUrl } from '@/lib/validation';
 
 export interface ProductFormState {
   errors?: Record<string, string>;
@@ -45,17 +46,19 @@ export async function createProduct(
   const description = String(formData.get('description') ?? '').trim();
   const categoryId = String(formData.get('categoryId') ?? '').trim();
   const priceRaw = String(formData.get('price') ?? '');
+  const externalUrl = String(formData.get('externalUrl') ?? '').trim(); 
 
   const errors: Record<string, string> = {};
   if (!name) errors.name = 'Informe o nome do produto.';
   if (!categoryId) errors.categoryId = 'Selecione uma categoria.';
+  if (externalUrl && !isValidUrl(externalUrl)) errors.externalUrl = 'Link inválido.';
 
   const { value: price, error: priceError } = parsePriceToCents(priceRaw);
   if (priceError) errors.price = priceError;
 
   if (Object.keys(errors).length > 0) return { errors };
 
-  const created = await productRepository.create({ storeId, categoryId, name, description: description || undefined, price });
+  const created = await productRepository.create({ storeId, categoryId, name, description: description || undefined, price, externalUrl: externalUrl || undefined });
   revalidatePath('/painel/produtos');
   redirect(`/painel/produtos/${created.id}/editar`);
 }
@@ -76,11 +79,13 @@ export async function updateProduct(
   const categoryId = String(formData.get('categoryId') ?? '').trim();
   const priceRaw = String(formData.get('price') ?? '');
   const status = String(formData.get('status') ?? 'ACTIVE') as 'ACTIVE' | 'INACTIVE';
-
+  const externalUrl = String(formData.get('externalUrl') ?? '').trim();
+  
   const errors: Record<string, string> = {};
   if (!name) errors.name = 'Informe o nome do produto.';
   if (!categoryId) errors.categoryId = 'Selecione uma categoria.';
 
+  if (externalUrl && !isValidUrl(externalUrl)) errors.externalUrl = 'Link inválido.';
   const { value: price, error: priceError } = parsePriceToCents(priceRaw);
   if (priceError) errors.price = priceError;
 
@@ -92,6 +97,7 @@ export async function updateProduct(
     categoryId,
     price,
     status,
+    externalUrl: externalUrl || undefined,
   });
 
   if (!updated) {

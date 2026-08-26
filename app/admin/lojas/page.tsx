@@ -33,7 +33,7 @@ export default async function AdminLojasPage() {
         </p>
 
         <div className="mt-8 flex flex-col gap-4">
-          {pendingStores.map((store) => {
+        {pendingStores.map((store: (typeof pendingStores)[number]) => {
             const owner = store.members.find((m) => m.role === 'OWNER')?.user;
 
             return (

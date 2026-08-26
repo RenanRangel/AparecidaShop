@@ -11,6 +11,7 @@ function mapProduct(product: any): ProductWithStore {
     description: product.description ?? undefined,
     storeId: product.storeId,
     categoryId: product.categoryId,
+    externalUrl: product.externalUrl ?? undefined,
 
     price: product.price,
 
@@ -211,6 +212,7 @@ implements ProductRepository {
         price: input.price,
         storeId: input.storeId,
         categoryId: input.categoryId,
+        externalUrl: input.externalUrl || null,
       },
       include: { store: true, category: true, images: true },
     });
@@ -234,6 +236,7 @@ implements ProductRepository {
         ...(input.categoryId !== undefined && { categoryId: input.categoryId }),
         ...(input.price !== undefined && { price: input.price }),
         ...(input.status !== undefined && { status: input.status }),
+        ...(input.externalUrl !== undefined && { externalUrl: input.externalUrl || null }),
       },
     });
 

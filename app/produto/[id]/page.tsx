@@ -8,6 +8,8 @@ import { productRepository } from '@/lib/repositories';
 import { getProductAddToListCount } from '@/lib/analytics/query';
 import { formatPriceBRL } from '@/lib/utils';
 import { StoreWhatsAppLink } from '@/components/analytics/StoreWhatsAppLink';
+import { ShoppingBag } from 'lucide-react';
+import { getMarketplaceLabel } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -73,6 +75,17 @@ export default async function ProductPage({ params }: { params: { id: string } }
               </div>
             )}
 
+{product.externalUrl && (
+              <a
+              href={product.externalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 inline-flex items-center gap-2 rounded-full border border-sand px-5 py-3 text-[14px] font-semibold text-ink transition-colors hover:border-pine hover:text-pine"
+            >
+              <ShoppingBag size={16} />
+              Comprar na {getMarketplaceLabel(product.externalUrl)}
+            </a>
+          )}
             <Link
               href={`/lojas/${product.storeSlug}`}
               className="mt-6 inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-pine hover:underline"

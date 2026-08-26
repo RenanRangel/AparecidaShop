@@ -71,8 +71,8 @@ export function StoreCreateForm({ categories }: { categories: Category[] }) {
         <Field label="E-mail" error={errors.email}>
           <input name="email" type="email" className="form-input" />
         </Field>
-        <Field label="CNPJ" error={errors.cnpj}>
-          <input name="cnpj" className="form-input" placeholder="00.000.000/0000-00" />
+        <Field label="CNPJ" required error={errors.cnpj}>
+          <input name="cnpj" required className="form-input" placeholder="00.000.000/0000-00" />
         </Field>
         <Field label="Instagram">
           <input name="instagram" className="form-input" placeholder="@sualoja" />
@@ -80,6 +80,23 @@ export function StoreCreateForm({ categories }: { categories: Category[] }) {
         <Field label="Galeria / centro comercial">
           <input name="gallery" className="form-input" />
         </Field>
+      </div>
+
+      <div>
+        <span className="mb-1.5 block text-[12.5px] font-semibold text-ink-soft">
+          Links de venda externa (opcional)
+        </span>
+        <div className="grid gap-3 sm:grid-cols-3">
+          <Field label="Shopee" error={errors.shopeeUrl}>
+            <input name="shopeeUrl" className="form-input" placeholder="https://shopee.com.br/..." />
+          </Field>
+          <Field label="Mercado Livre" error={errors.mercadoLivreUrl}>
+            <input name="mercadoLivreUrl" className="form-input" placeholder="https://mercadolivre.com.br/..." />
+          </Field>
+          <Field label="TikTok Shop" error={errors.tiktokShopUrl}>
+            <input name="tiktokShopUrl" className="form-input" placeholder="https://tiktok.com/shop/..." />
+          </Field>
+        </div>
       </div>
 
       <SubmitButton />

@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
 import type { Prisma } from '@prisma/client'; 
 import { prisma } from '@/lib/prisma';
-import { isValidCNPJ, isValidEmail, isValidPhone } from '@/lib/validation';
+import { isValidCNPJ, isValidEmail, isValidPhone, isValidUrl } from '@/lib/validation';
 import { slugify } from '@/lib/utils';
 
 export interface CreateStoreState {
@@ -34,6 +34,9 @@ export async function createStore(
   const email = String(formData.get('email') ?? '').trim();
   const instagram = String(formData.get('instagram') ?? '').trim();
   const gallery = String(formData.get('gallery') ?? '').trim();
+  const shopeeUrl = String(formData.get('shopeeUrl') ?? '').trim();    
+  const mercadoLivreUrl = String(formData.get('mercadoLivreUrl') ?? '').trim();
+  const tiktokShopUrl = String(formData.get('tiktokShopUrl') ?? '').trim();    
   const categoryIds = formData.getAll('categoryIds').map(String);
 
   const errors: Record<string, string> = {};
@@ -44,7 +47,15 @@ export async function createStore(
   if (!phone || !isValidPhone(phone)) errors.phone = 'Telefone inválido. Inclua o DDD.';
   if (!whatsapp || !isValidPhone(whatsapp)) errors.whatsapp = 'WhatsApp inválido. Inclua o DDD.';
   if (email && !isValidEmail(email)) errors.email = 'E-mail inválido.';
-  if (cnpj && !isValidCNPJ(cnpj)) errors.cnpj = 'CNPJ inválido.';
+  if (!cnpj) {
+    errors.cnpj = 'CNPJ é obrigatório.';
+  } else if (!isValidCNPJ(cnpj)) {
+    errors.cnpj = 'CNPJ inválido.';
+  }
+
+  if (shopeeUrl && !isValidUrl(shopeeUrl)) errors.shopeeUrl = 'Link inválido.';
+  if (mercadoLivreUrl && !isValidUrl(mercadoLivreUrl)) errors.mercadoLivreUrl = 'Link inválido.';
+  if (tiktokShopUrl && !isValidUrl(tiktokShopUrl)) errors.tiktokShopUrl = 'Link inválido.';
 
   if (Object.keys(errors).length > 0) return { errors };
 
@@ -69,12 +80,15 @@ export async function createStore(
         slug,
         description,
         location,
-        cnpj: cnpj || null,
+        cnpj: cnpj,
         phone: phone || null,
         whatsapp: whatsapp || null,
         email: email || null,
         instagram: instagram || null,
         gallery: gallery || null,
+        shopeeUrl: shopeeUrl || null,
+        mercadoLivreUrl: mercadoLivreUrl || null,
+        tiktokShopUrl: tiktokShopUrl || null,
         logoInitials,
         categories: { create: categoryIds.map((categoryId) => ({ categoryId })) },
       },

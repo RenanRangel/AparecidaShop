@@ -80,6 +80,16 @@ export function ProductForm({
             placeholder="Vazio = sob consulta"
           />
         </Field>
+
+        <Field label="Link de venda externa (Shopee, Mercado Livre, TikTok Shop...)" error={errors.externalUrl}>
+        <input
+          name="externalUrl"
+          defaultValue={product?.externalUrl}
+          className="form-input"
+          placeholder="https://..."
+        />
+      </Field>
+
       </div>
 
       {product && (

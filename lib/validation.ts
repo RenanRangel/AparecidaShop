@@ -40,3 +40,12 @@ export function isValidCNPJ(value: string): boolean {
 
   return cnpj === base + String(digit1) + String(digit2);
 }
+
+export function isValidUrl(value: string): boolean {
+  try {
+    const url = new URL(value.trim());
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}

@@ -19,6 +19,10 @@ export interface Store {
   instagram?: string;
 
   featured?: boolean;
+
+  shopeeUrl?: string;     
+  mercadoLivreUrl?: string; 
+  tiktokShopUrl?: string;   
 }
 
 export interface Product {
@@ -26,6 +30,7 @@ export interface Product {
 
   name: string;
   description?: string;
+  externalUrl?: string;
 
   storeId: string;
   categoryId: string;

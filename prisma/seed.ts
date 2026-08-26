@@ -54,6 +54,7 @@ async function main() {
     data: {
       name: "Loja São Francisco",
       slug: "loja-sao-francisco",
+      cnpj: "00.000.000/0001-00",
       description:
         "Terços, imagens e medalhas religiosas.",
       location:

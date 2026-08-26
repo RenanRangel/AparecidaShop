@@ -1,5 +1,4 @@
 import { Hero } from '@/components/home/Hero';
-import { BannerCarousel } from '@/components/home/BannerCarousel';
 import { SearchSection } from '@/components/home/SearchSection';
 import { FeaturedStores } from '@/components/home/FeaturedStores';
 import { productRepository } from '@/lib/repositories';
@@ -12,7 +11,6 @@ export default async function HomePage() {
   return (
     <>
       <Hero />
-      <BannerCarousel />
       <SearchSection initialPopularProducts={popularProducts} />
       <FeaturedStores />
     </>

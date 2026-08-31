@@ -1,0 +1,3 @@
+
+"postgresql://neondb_owner:npg_eqR8x6ziBWIk@ep-ancient-darkness-acjtxod3-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+16e47026d70f59a191589586cac216469fa63c6a41f9f34d817e7a673b471f54

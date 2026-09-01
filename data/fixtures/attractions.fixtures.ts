@@ -1,0 +1,26 @@
+import type { Attraction } from '@/types/attractions';
+
+export const attractionsFixture: Attraction[] = [
+  { id: 'santuario-nacional', name: 'Santuário Nacional', category: 'Religioso', emoji: '🙏', description: 'A principal atração da cidade e o ponto central da visita — a Basílica de Nossa Senhora Aparecida.' },
+  { id: 'torre-brasilia', name: 'Torre Brasília', category: 'Mirante', emoji: '🌄', description: 'Mirante do Santuário com vista panorâmica da região.' },
+  { id: 'museu-santuario', name: 'Museu do Santuário', category: 'História', emoji: '🏛️', description: 'Acervo histórico ligado à devoção a Nossa Senhora Aparecida.' },
+  { id: 'morro-presepio', name: 'Morro do Presépio', category: 'Religioso', emoji: '🙏', description: 'Dezenas de esculturas representando o nascimento de Jesus e o encontro da imagem de Nossa Senhora.' },
+  { id: 'centro-apoio-romeiro', name: 'Centro de Apoio ao Romeiro', category: 'Compras', emoji: '🛍️', description: 'Grande complexo comercial e gastronômico do Santuário, com lojas, restaurantes e serviços.' },
+  { id: 'basilica-velha', name: 'Basílica Histórica (Basílica Velha)', category: 'História', emoji: '⛪', description: 'Uma das atrações históricas mais importantes da cidade, inaugurada em 1888.' },
+  { id: 'passarela-fe', name: 'Passarela da Fé', category: 'Passeio', emoji: '🚶', description: 'Passarela de cerca de 392 metros que liga a Basílica Histórica ao Santuário Nacional.' },
+  { id: 'morro-cruzeiro', name: 'Morro do Cruzeiro', category: 'Passeio', emoji: '🌄', description: 'Percurso com as 14 estações da Via-Sacra, subindo a pé ou de bondinho.' },
+  { id: 'bondinho', name: 'Bondinho / Teleférico', category: 'Passeio', emoji: '🚡', description: 'Liga a região do Santuário ao Morro do Cruzeiro num percurso de 1,1 km.' },
+  { id: 'caminho-rosario', name: 'Caminho do Rosário', category: 'Religioso', emoji: '🌹', description: 'Percurso com 20 cenários representando os mistérios do Rosário, entre o Santuário e o Porto Itaguaçu.' },
+  { id: 'cidade-romeiro', name: 'Cidade do Romeiro', category: 'Família', emoji: '👨‍👩‍👧‍👦', description: 'Complexo de lazer e gastronomia com trenzinho, pedalinho e áreas de alimentação.' },
+  { id: 'trem-devoto', name: 'Trem do Devoto', category: 'Passeio', emoji: '🚂', description: 'Passeio de trenzinho pela Cidade do Romeiro, ótima opção pra quem não quer caminhar o trajeto todo.' },
+  { id: 'porto-itaguacu', name: 'Porto Itaguaçu', category: 'História', emoji: '📜', description: 'Local no Rio Paraíba do Sul associado ao encontro da imagem de Nossa Senhora Aparecida, em 1717.' },
+  { id: 'parque-tres-pescadores', name: 'Parque Três Pescadores', category: 'Família', emoji: '👨‍👩‍👧‍👦', description: 'Atração mais recente do Porto Itaguaçu, boa opção para quem viaja em família.' },
+  { id: 'capela-sao-geraldo', name: 'Capela São Geraldo', category: 'Religioso', emoji: '⛪', description: 'No Porto Itaguaçu, construída em 1926, com importância histórica na devoção.' },
+  { id: 'mirante-pedras', name: 'Mirante das Pedras', category: 'Mirante', emoji: '🌄', description: 'Vista para o Rio Paraíba do Sul e a Serra da Mantiqueira, próximo ao Porto Itaguaçu.' },
+  { id: 'aquario', name: 'Aquário de Aparecida', category: 'Família', emoji: '🐟', description: 'Tanques com espécies de água doce e salgada, incluindo uma área com tubarões.' },
+  { id: 'seminario-bom-jesus', name: 'Seminário Bom Jesus', category: 'História', emoji: '🏛️', description: 'Edificação histórica do final do século XIX, que já recebeu personalidades religiosas.' },
+  { id: 'igreja-sao-benedito', name: 'Igreja de São Benedito', category: 'Religioso', emoji: '⛪', description: 'Importante ponto religioso e histórico, ligado à tradicional Festa de São Benedito.' },
+  { id: 'estacao-ferroviaria', name: 'Estação Ferroviária de Aparecida', category: 'História', emoji: '🚂', description: 'Inaugurada em 1877 para facilitar a chegada dos romeiros à cidade.' },
+  { id: 'feira-livre', name: 'Feira Livre de Aparecida', category: 'Compras', emoji: '🛍️', description: 'Mais de 2 mil barracas com artigos religiosos, lembranças, roupas e outros produtos.' },
+  { id: 'passeio-rio', name: 'Passeio pelo Rio Paraíba', category: 'Passeio', emoji: '🚤', description: 'Passeios de barco pelo Rio Paraíba do Sul, na região do Porto Itaguaçu.' },
+];

@@ -12,6 +12,9 @@ function mapProduct(product: any): ProductWithStore {
     storeId: product.storeId,
     categoryId: product.categoryId,
     externalUrl: product.externalUrl ?? undefined,
+    storeShopeeUrl: product.store?.shopeeUrl ?? undefined,
+    storeMercadoLivreUrl: product.store?.mercadoLivreUrl ?? undefined,
+    storeTiktokShopUrl: product.store?.tiktokShopUrl ?? undefined,
 
     price: product.price,
 

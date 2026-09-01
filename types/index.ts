@@ -49,4 +49,7 @@ export interface ProductWithStore extends Product {
   storeName: string;
   storeWhatsapp?: string;
   storeSlug: string;
+  storeShopeeUrl?: string; 
+  storeMercadoLivreUrl?: string;
+  storeTiktokShopUrl?: string;   
 }

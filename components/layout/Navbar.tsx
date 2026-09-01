@@ -11,6 +11,9 @@ const LINKS = [
   { href: '/', label: 'Início' },
   { href: '/lojas', label: 'Lojas' },
   { href: '/sobre', label: 'Sobre' },
+  { href: '/pontos-turisticos', label: 'Pontos turísticos' },
+  { href: '/missas', label: 'Missas' },
+  { href: '/sobre', label: 'Sobre' },
 ];
 
 export function Navbar() {

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, Search } from 'lucide-react';
+import { ArrowRight, Search, Compass } from 'lucide-react';
 import { HeroStoreShowcase } from './HeroStoreShowcase';
 import type { Store } from '@/types';
 
@@ -11,11 +11,11 @@ export function HeroSlideMain({ stores }: { stores: Store[] }) {
           Comércio local de Aparecida-SP
         </span>
         <h1 className="mt-5 font-display text-[38px] font-semibold leading-[1.06] tracking-tight text-ink sm:text-[48px] lg:text-[54px]">
-          Encontre as lojas e produtos que fazem parte da sua experiência em Aparecida.
+          Tudo o que você procura em Aparecida, em um só lugar.
         </h1>
         <p className="mt-5 max-w-[480px] text-[16.5px] leading-relaxed text-ink-soft">
-          Descubra comércios locais, encontre seus produtos favoritos e conecte-se diretamente
-          com as lojas da cidade.
+          Lojas, produtos e comércio local — encontre onde comprar e fale direto com quem vende.
+          E, se ainda sobrar tempo, descubra os pontos turísticos e religiosos da cidade.
         </p>
         <div className="mt-8 flex flex-wrap items-center gap-3.5">
           <Link
@@ -33,6 +33,13 @@ export function HeroSlideMain({ stores }: { stores: Store[] }) {
             Pesquisar produtos
           </a>
         </div>
+        <Link
+          href="/pontos-turisticos"
+          className="mt-4 inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-ink-soft transition-colors hover:text-pine"
+        >
+          <Compass size={14} />
+          Explorar pontos turísticos de Aparecida
+        </Link>
       </div>
 
       <HeroStoreShowcase stores={stores} />

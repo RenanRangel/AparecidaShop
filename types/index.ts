@@ -17,6 +17,7 @@ export interface Store {
 
   whatsapp?: string;
   instagram?: string;
+  openingHours?: string;
 
   featured?: boolean;
 

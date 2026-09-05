@@ -8,6 +8,7 @@ import {
   MessageCircle,
   Instagram,
   ExternalLink,
+  Clock,
 } from 'lucide-react';
 import { Container } from '@/components/shared/Container';
 import { ProductCard } from '@/components/shared/ProductCard';
@@ -126,6 +127,12 @@ export default async function StorePage({ params }: { params: { storeSlug: strin
 
               <p className="mt-3 flex items-start gap-2 text-[13.5px] text-ink-soft">
                 <MapPin size={15} className="mt-0.5 shrink-0" />
+                {store.openingHours && (
+                  <p className="mt-2 flex items-start gap-2 text-[13.5px] text-ink-soft">
+                    <Clock size={15} className="mt-0.5 shrink-0" />
+                    {store.openingHours}
+                  </p>
+                )}
                 {store.location}
               </p>
 
@@ -142,6 +149,7 @@ export default async function StorePage({ params }: { params: { storeSlug: strin
                 >
                   <Instagram size={15} />@{store.instagram}
                 </a>
+                
               )}
                               {(store.shopeeUrl || store.mercadoLivreUrl || store.tiktokShopUrl) && (
                   <div className="mt-3 flex flex-wrap gap-2 border-t border-sand pt-3">

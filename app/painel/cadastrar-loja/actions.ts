@@ -33,6 +33,7 @@ export async function createStore(
   const whatsapp = String(formData.get('whatsapp') ?? '').trim();
   const email = String(formData.get('email') ?? '').trim();
   const instagram = String(formData.get('instagram') ?? '').trim();
+  const openingHours = String(formData.get('openingHours') ?? '').trim();
   const gallery = String(formData.get('gallery') ?? '').trim();
   const shopeeUrl = String(formData.get('shopeeUrl') ?? '').trim();    
   const mercadoLivreUrl = String(formData.get('mercadoLivreUrl') ?? '').trim();
@@ -85,6 +86,7 @@ export async function createStore(
         whatsapp: whatsapp || null,
         email: email || null,
         instagram: instagram || null,
+        openingHours: openingHours || null,
         gallery: gallery || null,
         shopeeUrl: shopeeUrl || null,
         mercadoLivreUrl: mercadoLivreUrl || null,

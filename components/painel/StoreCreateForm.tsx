@@ -80,6 +80,9 @@ export function StoreCreateForm({ categories }: { categories: Category[] }) {
         <Field label="Galeria / centro comercial">
           <input name="gallery" className="form-input" />
         </Field>
+        <Field label="Horário de funcionamento">
+          <input name="openingHours" className="form-input" placeholder="Ex: Seg a Sex, 9h às 18h" />
+        </Field>
       </div>
 
       <div>

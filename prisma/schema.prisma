@@ -101,6 +101,7 @@ model Store {
   whatsapp    String?
   email       String?
   instagram   String?
+  openingHours String?
   gallery     String?
   shopeeUrl   String?
   mercadoLivreUrl String?

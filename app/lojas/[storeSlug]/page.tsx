@@ -127,14 +127,15 @@ export default async function StorePage({ params }: { params: { storeSlug: strin
 
               <p className="mt-3 flex items-start gap-2 text-[13.5px] text-ink-soft">
                 <MapPin size={15} className="mt-0.5 shrink-0" />
-                {store.openingHours && (
+               
+                {store.location}
+              </p>
+              {store.openingHours && (
                   <p className="mt-2 flex items-start gap-2 text-[13.5px] text-ink-soft">
                     <Clock size={15} className="mt-0.5 shrink-0" />
                     {store.openingHours}
                   </p>
                 )}
-                {store.location}
-              </p>
 
               {store.whatsapp && (
                 <StoreWhatsAppLink storeId={store.id} whatsapp={store.whatsapp} />

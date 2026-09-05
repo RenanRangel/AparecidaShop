@@ -6,6 +6,7 @@ import type { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { isValidCNPJ, isValidEmail, isValidPhone, isValidUrl } from '@/lib/validation';
 import { slugify } from '@/lib/utils';
+import { geocodeAddress } from '@/lib/geocoding';
 
 export interface CreateStoreState {
   errors?: Record<string, string>;
@@ -59,6 +60,7 @@ export async function createStore(
   if (tiktokShopUrl && !isValidUrl(tiktokShopUrl)) errors.tiktokShopUrl = 'Link inválido.';
 
   if (Object.keys(errors).length > 0) return { errors };
+  const coordinates = await geocodeAddress(location);
 
   const baseSlug = slugify(name);
   let slug = baseSlug;
@@ -91,6 +93,8 @@ export async function createStore(
         shopeeUrl: shopeeUrl || null,
         mercadoLivreUrl: mercadoLivreUrl || null,
         tiktokShopUrl: tiktokShopUrl || null,
+        latitude: coordinates?.latitude ?? null,
+        longitude: coordinates?.longitude ?? null,
         logoInitials,
         categories: { create: categoryIds.map((categoryId) => ({ categoryId })) },
       },

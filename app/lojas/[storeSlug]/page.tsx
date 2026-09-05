@@ -59,9 +59,11 @@ export default async function StorePage({ params }: { params: { storeSlug: strin
   if (!store) notFound();
 
   const products = await productRepository.getByStoreId(store.id);
-  const mapQuery = encodeURIComponent(`${store.name}, ${store.location}`);
-
-  return (
+  const mapQuery =
+    store.latitude && store.longitude
+      ? `${store.latitude},${store.longitude}`
+      : encodeURIComponent(`${store.name}, ${store.location}`);
+        return (
     <>
     <TrackStoreView storeId={store.id} />
     <section className="py-16 sm:py-24">

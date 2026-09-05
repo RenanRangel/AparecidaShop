@@ -8,6 +8,8 @@ export interface Store {
   category: string;
 
   location: string;
+  latitude?: number;
+  longitude?: number;
   description: string;
 
   logoInitials: string;

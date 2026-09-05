@@ -30,6 +30,8 @@ function mapStore(store: any): Store {
 
     instagram: store.instagram ?? undefined,
 
+    openingHours: store.openingHours ?? undefined,
+
     featured: false,
 
     shopeeUrl: store.shopeeUrl ?? undefined,

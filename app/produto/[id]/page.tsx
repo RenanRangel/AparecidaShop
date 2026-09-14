@@ -8,6 +8,9 @@ import { productRepository } from '@/lib/repositories';
 import { getProductAddToListCount } from '@/lib/analytics/query';
 import { formatPriceBRL, getMarketplaceLabel } from '@/lib/utils';
 import { StoreWhatsAppLink } from '@/components/analytics/StoreWhatsAppLink';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { Breadcrumbs } from '@/components/shared/Breadcrumbs';
+import { buildProductJsonLd } from '@/lib/seo/structured-data';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,6 +21,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   return {
     title: `${product.name} — ${product.storeName} | AparecidaShop`,
     description: product.description || `${product.name}, disponível na ${product.storeName}.`,
+    alternates: { canonical: `/produto/${product.id}` },
   };
 }
 
@@ -26,6 +30,13 @@ export default async function ProductPage({ params }: { params: { id: string } }
   if (!product) notFound();
 
   const favoriteCount = await getProductAddToListCount(product.id);
+
+  const breadcrumbItems = [
+    { label: 'Início', href: '/' },
+    { label: 'Lojas', href: '/lojas' },
+    { label: product.storeName, href: `/lojas/${product.storeSlug}` },
+    { label: product.name, href: `/produto/${product.id}` },
+  ];
 
   const storeMarketplaces = [
     product.storeShopeeUrl && { label: 'Shopee', url: product.storeShopeeUrl },
@@ -36,6 +47,8 @@ export default async function ProductPage({ params }: { params: { id: string } }
   return (
     <section className="py-16 sm:py-24">
       <Container>
+      <JsonLd data={buildProductJsonLd(product)} />
+      <Breadcrumbs items={breadcrumbItems} />
         <Link
           href="/lojas"
           className="inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-ink-soft transition-colors hover:text-pine"

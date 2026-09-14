@@ -16,7 +16,9 @@ import { storeRepository, productRepository } from '@/lib/repositories';
 import { cn, formatPhoneDisplay, normalizePhoneDigits } from '@/lib/utils';
 import { TrackStoreView } from '@/components/analytics/TrackStoreView';
 import { StoreWhatsAppLink } from '@/components/analytics/StoreWhatsAppLink';
-
+import { JsonLd } from '@/components/seo/JsonLd';
+import { Breadcrumbs } from '@/components/shared/Breadcrumbs';
+import { buildStoreJsonLd } from '@/lib/seo/structured-data';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,6 +42,7 @@ export async function generateMetadata({
   return {
     title,
     description,
+    alternates: { canonical: `/lojas/${store.slug}` },
     openGraph: {
       title,
       description,
@@ -63,14 +66,23 @@ export default async function StorePage({ params }: { params: { storeSlug: strin
     store.latitude && store.longitude
       ? `${store.latitude},${store.longitude}`
       : encodeURIComponent(`${store.name}, ${store.location}`);
+
+      const breadcrumbItems = [
+        { label: 'Início', href: '/' },
+        { label: 'Lojas', href: '/lojas' },
+        { label: store.name, href: `/lojas/${store.slug}` },
+      ];
+
         return (
     <>
     <TrackStoreView storeId={store.id} />
     <section className="py-16 sm:py-24">
       <Container>
+      <JsonLd data={buildStoreJsonLd(store)} />
+      <Breadcrumbs items={breadcrumbItems} />
         <Link
           href="/lojas"
-          className="inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-ink-soft transition-colors hover:text-pine"
+          className="mt-4 inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-ink-soft transition-colors hover:text-pine"
         >
           <ArrowLeft size={15} />
           Voltar para lojas

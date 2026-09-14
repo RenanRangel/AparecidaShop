@@ -1,4 +1,5 @@
 export type { StoreCategory } from "@/lib/constants/categories";
+import type { StoreZoneValue } from '@/lib/constants/zones';
 
 export interface Store {
   id: string;
@@ -10,6 +11,7 @@ export interface Store {
   location: string;
   latitude?: number;
   longitude?: number;
+  zone?: StoreZoneValue;
   description: string;
 
   logoInitials: string;

@@ -1,5 +1,5 @@
 import { Container } from '@/components/shared/Container';
-import { CategoryFilter } from '@/components/lojas/CategoryFilter';
+import { StoreDirectoryFilters  } from '@/components/lojas/StoreDirectoryFilters';
 import { storeRepository } from '@/lib/repositories';
 
 export const dynamic = "force-dynamic";
@@ -21,7 +21,7 @@ export default async function LojasPage() {
           procura.
         </p>
 
-        <CategoryFilter stores={stores} />
+        <StoreDirectoryFilters  stores={stores} />
       </Container>
     </section>
   );

@@ -28,6 +28,13 @@ enum UserRole {
   VISITANTE
 }
 
+enum StoreZone {
+  CENTRO
+  AV_ITAGUACU
+  PROXIMO_SANTUARIO
+  PORTO_ITAGUACU
+}
+
 enum AnalyticsEventType {
   STORE_VIEW
   PRODUCT_VIEW
@@ -95,6 +102,7 @@ model Store {
   location    String
   latitude    Float?
   longitude   Float?
+  zone        StoreZone?
 
   cnpj        String
   phone       String?

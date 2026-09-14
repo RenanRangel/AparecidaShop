@@ -7,6 +7,7 @@ import { prisma } from '@/lib/prisma';
 import { isValidCNPJ, isValidEmail, isValidPhone, isValidUrl } from '@/lib/validation';
 import { slugify } from '@/lib/utils';
 import { geocodeAddress } from '@/lib/geocoding';
+import { STORE_ZONES, StoreZoneValue } from '@/lib/constants/zones';
 
 export interface CreateStoreState {
   errors?: Record<string, string>;
@@ -40,11 +41,13 @@ export async function createStore(
   const mercadoLivreUrl = String(formData.get('mercadoLivreUrl') ?? '').trim();
   const tiktokShopUrl = String(formData.get('tiktokShopUrl') ?? '').trim();    
   const categoryIds = formData.getAll('categoryIds').map(String);
+  const zone = String(formData.get('zone') ?? '').trim();
 
   const errors: Record<string, string> = {};
   if (!name) errors.name = 'Informe o nome da loja.';
   if (!description) errors.description = 'Descreva brevemente a loja.';
   if (!location) errors.location = 'Informe o endereço da loja.';
+  if (!STORE_ZONES.includes(zone as any)) errors.zone = 'Selecione a região da loja.';
   if (categoryIds.length === 0) errors.categoryIds = 'Selecione ao menos uma categoria.';
   if (!phone || !isValidPhone(phone)) errors.phone = 'Telefone inválido. Inclua o DDD.';
   if (!whatsapp || !isValidPhone(whatsapp)) errors.whatsapp = 'WhatsApp inválido. Inclua o DDD.';
@@ -83,6 +86,7 @@ export async function createStore(
         slug,
         description,
         location,
+        zone: zone as StoreZoneValue,
         cnpj: cnpj,
         phone: phone || null,
         whatsapp: whatsapp || null,

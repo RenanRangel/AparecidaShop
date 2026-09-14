@@ -2,6 +2,7 @@
 
 import { useFormState, useFormStatus } from 'react-dom';
 import { createStore, type CreateStoreState } from '@/app/painel/cadastrar-loja/actions';
+import { STORE_ZONES, STORE_ZONE_LABELS } from '@/lib/constants/zones';
 
 interface Category {
   id: string;
@@ -67,6 +68,14 @@ export function StoreCreateForm({ categories }: { categories: Category[] }) {
         </Field>
         <Field label="WhatsApp" required error={errors.whatsapp}>
           <input name="whatsapp" required className="form-input" placeholder="(12) 90000-0000" />
+        </Field>
+        <Field label="Região da loja" required error={errors.zone}>
+          <select name="zone" required className="form-input">
+            <option value="" disabled selected>Selecione</option>
+            {STORE_ZONES.map((z) => (
+              <option key={z} value={z}>{STORE_ZONE_LABELS[z]}</option>
+            ))}
+          </select>
         </Field>
         <Field label="E-mail" error={errors.email}>
           <input name="email" type="email" className="form-input" />

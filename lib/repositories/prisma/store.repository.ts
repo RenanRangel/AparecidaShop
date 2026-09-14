@@ -19,6 +19,7 @@ function mapStore(store: any): Store {
 
     latitude: store.latitude ?? undefined,
     longitude: store.longitude ?? undefined,
+    zone: store.zone ?? undefined,
 
     description: store.description,
 

@@ -31,9 +31,7 @@ export const metadata: Metadata = {
   title: 'AparecidaShop — comércio local de Aparecida-SP',
   description:
     'Encontre lojas e produtos do comércio local de Aparecida-SP e conecte-se diretamente com os estabelecimentos.',
-  verification: {
-      google: 'dgZbPUoq2i68yFu_1gncmcJ1EMLkKv2kGuFJjPzeCnA',
-  },
+    verification: { google: 'o-código-que-o-google-te-der' },
   openGraph: {
     title: 'AparecidaShop — comércio local de Aparecida-SP',
     description:

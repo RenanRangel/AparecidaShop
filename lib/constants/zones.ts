@@ -1,15 +1,22 @@
 export const STORE_ZONES = [
-    'CENTRO',
+    'GALERIA',
     'AV_ITAGUACU',
-    'PROXIMO_SANTUARIO',
     'PORTO_ITAGUACU',
+    'SHOPPING',
+    'LADEIRA',
+    'RADIO_TV',
+    'AV_JULIO_PRESTES',
+
   ] as const;
   
   export type StoreZoneValue = (typeof STORE_ZONES)[number];
   
   export const STORE_ZONE_LABELS: Record<StoreZoneValue, string> = {
-    CENTRO: 'Centro',
+    GALERIA: 'Galeria Recreio',
     AV_ITAGUACU: 'Av. Itaguaçu',
-    PROXIMO_SANTUARIO: 'Próximo ao Santuário',
     PORTO_ITAGUACU: 'Porto Itaguaçu',
+    SHOPPING: 'Centro de Apoio ao Romeiro',
+    LADEIRA: 'Rua Monte Carmelo',
+    RADIO_TV: 'Av. Getúlio Vargas',  
+    AV_JULIO_PRESTES: 'Av. Dr. Júlio Prestes'
   };

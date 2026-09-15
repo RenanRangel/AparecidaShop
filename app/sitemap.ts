@@ -15,7 +15,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/pontos-turisticos`, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/missas`, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/para-lojas`, changeFrequency: 'monthly', priority: 0.5 },
-    { url: `${BASE_URL}/sobre`, changeFrequency: 'yearly', priority: 0.3 },
     { url: `${BASE_URL}/privacidade`, changeFrequency: 'yearly', priority: 0.1 },
   ];
 

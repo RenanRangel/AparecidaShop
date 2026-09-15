@@ -27,7 +27,8 @@ export function Footer() {
           <ul className="mt-4 flex flex-col gap-2.5 text-[14px] text-ink-soft">
             <li><Link href="/" className="hover:text-ink">Início</Link></li>
             <li><Link href="/lojas" className="hover:text-ink">Lojas</Link></li>
-            <li><Link href="/sobre" className="hover:text-ink">Sobre</Link></li>
+            <li><Link href="/pontos-turisticos" className="hover:text-ink">Pontos Turísticos</Link></li>
+            <li><Link href="/missas" className="hover:text-ink">Missas</Link></li>
             <li><Link href="/privacidade" className="hover:text-ink">Privacidade</Link></li>
           </ul>
         </div>

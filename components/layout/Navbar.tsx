@@ -12,7 +12,6 @@ const LINKS = [
   { href: '/lojas', label: 'Lojas' },
   { href: '/pontos-turisticos', label: 'Pontos turísticos' },
   { href: '/missas', label: 'Missas' },
-  { href: '/sobre', label: 'Sobre' },
 ];
 
 export function Navbar() {
@@ -50,7 +49,7 @@ export function Navbar() {
             href="/lista"
             className="relative flex items-center gap-1.5 text-[14px] font-medium text-ink-soft transition-colors hover:text-ink"
           >
-            <Heart size={15} />
+            <Heart size={12} />
             Minha lista
             {items.length > 0 && (
               <span className="absolute -right-2.5 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-marigold text-[10px] font-bold text-ink">

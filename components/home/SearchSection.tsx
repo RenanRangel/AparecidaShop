@@ -4,7 +4,7 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { Search, SearchX } from 'lucide-react';
 import { Container } from '@/components/shared/Container';
 import { ProductCard } from '@/components/shared/ProductCard';
-import { productRepository } from '@/lib/repositories';
+import { searchProductsAction } from '@/app/actions/search';
 import type { ProductWithStore } from '@/types';
 
 const SUGGESTIONS = ['terço', 'camiseta', 'lembrança', 'doce', 'imagem'];
@@ -32,8 +32,8 @@ export function SearchSection({
     let isCurrent = true;
     setIsSearching(true);
 
-    productRepository.search(submitted).then((found) => {
-      if (isCurrent) {
+    searchProductsAction(submitted).then((found) => {
+            if (isCurrent) {
         setResults(found);
         setIsSearching(false);
       }

@@ -224,10 +224,13 @@ enum UserRole {
 }
 
 enum StoreZone {
-  CENTRO
-  AV_ITAGUACU
-  PROXIMO_SANTUARIO
-  PORTO_ITAGUACU
+   GALERIA
+    AV_ITAGUACU
+    PORTO_ITAGUACU
+    SHOPPING
+    LADEIRA
+    RADIO_TV
+    AV_JULIO_PRESTES
 }
 
 enum AnalyticsEventType {

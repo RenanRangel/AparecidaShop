@@ -9,7 +9,7 @@ import { slugify } from '@/lib/utils';
 import { geocodeAddress } from '@/lib/geocoding';
 import { STORE_ZONES } from '@/lib/constants/zones';
 import { StoreZone } from '@prisma/client';
-
+import { uploadStoreImage } from '@/lib/blob';
 
 export interface CreateStoreState {
   errors?: Record<string, string>;
@@ -44,6 +44,7 @@ export async function createStore(
   const tiktokShopUrl = String(formData.get('tiktokShopUrl') ?? '').trim();    
   const categoryIds = formData.getAll('categoryIds').map(String);
   const zone = String(formData.get('zone') ?? '').trim();
+  const image = formData.get('image');
 
   const errors: Record<string, string> = {};
   if (!name) errors.name = 'Informe o nome da loja.';
@@ -73,6 +74,21 @@ export async function createStore(
   while (await prisma.store.findUnique({ where: { slug } })) {
     slug = `${baseSlug}-${attempt++}`;
   }
+  if (image instanceof File && image.size > 0) {
+    const allowedTypes = [
+      'image/jpeg',
+      'image/png',
+      'image/webp',
+    ];
+  
+    if (!allowedTypes.includes(image.type)) {
+      errors.image = 'Formato inválido. Use JPG, PNG ou WEBP.';
+    }
+  
+    if (image.size > 4 * 1024 * 1024) {
+      errors.image = 'Imagem muito grande. O tamanho máximo é 4MB.';
+    }
+  }
 
   const logoInitials = name
     .split(/\s+/)
@@ -81,44 +97,84 @@ export async function createStore(
     .map((w) => w[0]!.toUpperCase())
     .join('');
 
-  await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-    const store = await tx.store.create({
-      data: {
-        name,
-        slug,
-        description,
-        location,
-        zone: zone as StoreZone,
-        cnpj: cnpj,
-        phone: phone || null,
-        whatsapp: whatsapp || null,
-        email: email || null,
-        instagram: instagram || null,
-        openingHours: openingHours || null,
-        gallery: gallery || null,
-        shopeeUrl: shopeeUrl || null,
-        mercadoLivreUrl: mercadoLivreUrl || null,
-        tiktokShopUrl: tiktokShopUrl || null,
-        latitude: coordinates?.latitude ?? null,
-        longitude: coordinates?.longitude ?? null,
-        logoInitials,
-        categories: { create: categoryIds.map((categoryId) => ({ categoryId })) },
+    const store = await prisma.$transaction(
+      async (tx: Prisma.TransactionClient) => {
+        const createdStore = await tx.store.create({
+          data: {
+            name,
+            slug,
+            description,
+            location,
+            zone: zone as StoreZone,
+            cnpj,
+            phone: phone || null,
+            whatsapp: whatsapp || null,
+            email: email || null,
+            instagram: instagram || null,
+            openingHours: openingHours || null,
+            gallery: gallery || null,
+            shopeeUrl: shopeeUrl || null,
+            mercadoLivreUrl: mercadoLivreUrl || null,
+            tiktokShopUrl: tiktokShopUrl || null,
+            latitude: coordinates?.latitude ?? null,
+            longitude: coordinates?.longitude ?? null,
+            logoInitials,
+            categories: {
+              create: categoryIds.map((categoryId) => ({
+                categoryId,
+              })),
+            },
+          },
+        });
+    
+        await tx.storeMember.create({
+          data: {
+            storeId: createdStore.id,
+            userId: session.user.id,
+            role: 'OWNER',
+          },
+        });
+    
+        await tx.storeStatusHistory.create({
+          data: {
+            storeId: createdStore.id,
+            toStatus: 'PENDING',
+            changedByUserId: session.user.id,
+            reason: 'Loja criada pelo lojista via /painel/cadastrar-loja',
+          },
+        });
+    
+        return createdStore;
       },
-    });
+    );
 
-    await tx.storeMember.create({
-      data: { storeId: store.id, userId: session.user.id, role: 'OWNER' },
-    });
+    if (image instanceof File && image.size > 0) {
+      const uploadResult = await uploadStoreImage(
+        image,
+        store.id,
+        'perfil',
+      );
+    
+      if (uploadResult.error || !uploadResult.url) {
+        return {
+          errors: {
+            image:
+              uploadResult.error ??
+              'Não foi possível enviar a foto da loja.',
+          },
+        };
+      }
+    
+      await prisma.store.update({
+        where: {
+          id: store.id,
+        },
+        data: {
+          logoUrl: uploadResult.url,
+        },
+      });
+    }
+    
+    redirect('/painel');
 
-    await tx.storeStatusHistory.create({
-      data: {
-        storeId: store.id,
-        toStatus: 'PENDING',
-        changedByUserId: session.user.id,
-        reason: 'Loja criada pelo lojista via /painel/cadastrar-loja',
-      },
-    });
-  });
-
-  redirect('/painel');
 }

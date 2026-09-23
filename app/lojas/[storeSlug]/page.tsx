@@ -129,17 +129,7 @@ export default async function StorePage({ params }: { params: { storeSlug: strin
 
             <h2 className="mt-10 font-display text-[16px] font-semibold text-ink">Produtos</h2>
             <StoreContentTabs products={products} galleryImages={store.galleryImages} storeName={store.name} />
-            {products.length > 0 ? (
-              <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
-                {products.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
-            ) : (
-              <p className="mt-4 text-[14px] text-ink-soft">
-                Esta loja ainda não cadastrou produtos.
-              </p>
-            )}
+
           </div>
 
           <div className="flex flex-col gap-5">

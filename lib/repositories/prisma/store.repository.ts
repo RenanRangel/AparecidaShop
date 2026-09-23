@@ -41,7 +41,7 @@ function mapStore(store: any): Store {
     shopeeUrl: store.shopeeUrl ?? undefined,
     mercadoLivreUrl: store.mercadoLivreUrl ?? undefined,
     tiktokShopUrl: store.tiktokShopUrl ?? undefined,
-        logoUrl: store.logoUrl ?? undefined,
+    logoUrl: store.logoUrl ?? undefined,
     galleryImages: (store.galleryImages ?? [])
       .slice()
       .sort((a: any, b: any) => a.position - b.position)
@@ -62,9 +62,9 @@ export class PrismaStoreRepository implements StoreRepository {
             categories: {
               include: {
                 category: true,
-                 galleryImages: true,
               },
             },
+            galleryImages: true,
           },
         },
       },
@@ -87,9 +87,9 @@ export class PrismaStoreRepository implements StoreRepository {
         categories: {
           include: {
             category: true,
-             galleryImages: true,
           }
-        }
+        },
+        galleryImages: true,
       }
 
     });
@@ -114,9 +114,9 @@ export class PrismaStoreRepository implements StoreRepository {
         categories:{
           include:{
             category:true,
-             galleryImages: true,
           }
-        }
+        },
+        galleryImages: true,
       },
 
       orderBy:{
@@ -145,9 +145,9 @@ export class PrismaStoreRepository implements StoreRepository {
         categories:{
           include:{
             category:true,
-             galleryImages: true,
           }
-        }
+        },
+        galleryImages: true,
       }
 
     });
@@ -175,9 +175,9 @@ export class PrismaStoreRepository implements StoreRepository {
         categories: {
           include: {
             category: true,
-             galleryImages: true,
           }
-        }
+        },
+        galleryImages: true,
       },
 
       orderBy: {

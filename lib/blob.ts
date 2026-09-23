@@ -5,6 +5,22 @@ const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
 type UploadResult = { url: string; error?: never } | { url?: never; error: string };
 
+export async function uploadProductImage(file: File, productId: string): Promise<UploadResult> {
+  if (!ALLOWED_TYPES.includes(file.type)) {
+    return { error: 'Formato inválido. Use JPG, PNG ou WEBP.' };
+  }
+  if (file.size > MAX_FILE_SIZE) {
+    return { error: 'Imagem muito grande (máximo 4MB).' };
+  }
+
+  const extension = file.type.split('/')[1];
+  const blob = await put(`produtos/${productId}/${Date.now()}.${extension}`, file, {
+    access: 'public',
+  });
+
+  return { url: blob.url };
+}
+
 export async function uploadStoreImage(
   file: File,
   storeId: string,

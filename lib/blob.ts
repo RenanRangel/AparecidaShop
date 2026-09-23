@@ -5,7 +5,11 @@ const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
 type UploadResult = { url: string; error?: never } | { url?: never; error: string };
 
-export async function uploadProductImage(file: File, productId: string): Promise<UploadResult> {
+export async function uploadStoreImage(
+  file: File,
+  storeId: string,
+  folder: 'perfil' | 'galeria',
+): Promise<UploadResult> {
   if (!ALLOWED_TYPES.includes(file.type)) {
     return { error: 'Formato inválido. Use JPG, PNG ou WEBP.' };
   }
@@ -14,7 +18,7 @@ export async function uploadProductImage(file: File, productId: string): Promise
   }
 
   const extension = file.type.split('/')[1];
-  const blob = await put(`produtos/${productId}/${Date.now()}.${extension}`, file, {
+  const blob = await put(`lojas/${storeId}/${folder}/${Date.now()}.${extension}`, file, {
     access: 'public',
   });
 

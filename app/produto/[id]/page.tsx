@@ -11,6 +11,7 @@ import { StoreWhatsAppLink } from '@/components/analytics/StoreWhatsAppLink';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs';
 import { buildProductJsonLd } from '@/lib/seo/structured-data';
+import Image from 'next/image';
 
 export const dynamic = 'force-dynamic';
 
@@ -67,8 +68,14 @@ export default async function ProductPage({ params }: { params: { id: string } }
             <h1 className="mt-2 font-display text-[28px] font-semibold tracking-tight text-ink sm:text-[34px]">
               {product.name}
             </h1>
-            <p className="mt-1.5 text-[14px] font-medium text-ink-soft">{product.storeName}</p>
-
+            <div className="mt-1.5 flex items-center gap-2">
+              {product.storeLogoUrl && (
+                <span className="relative h-6 w-6 shrink-0 overflow-hidden rounded-full border border-sand">
+                  <Image src={product.storeLogoUrl} alt={product.storeName} fill className="object-cover" sizes="24px" />
+                </span>
+              )}
+              <p className="text-[14px] font-medium text-ink-soft">{product.storeName}</p>
+            </div>
             <div className="mt-5 flex flex-wrap items-center gap-4">
               <span className="font-mono text-[24px] font-semibold text-pine-deep">
                 {formatPriceBRL(product.price)}

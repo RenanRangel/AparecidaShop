@@ -27,7 +27,10 @@ export interface Store {
 
   shopeeUrl?: string;     
   mercadoLivreUrl?: string; 
-  tiktokShopUrl?: string;   
+  tiktokShopUrl?: string;  
+  
+  logoUrl?: string;
+  galleryImages: { id: string; url: string }[];
 }
 
 export interface Product {
@@ -56,5 +59,7 @@ export interface ProductWithStore extends Product {
   storeSlug: string;
   storeShopeeUrl?: string; 
   storeMercadoLivreUrl?: string;
-  storeTiktokShopUrl?: string;   
+  storeTiktokShopUrl?: string; 
+  storeLogoUrl?: string;
+  
 }

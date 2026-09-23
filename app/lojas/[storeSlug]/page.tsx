@@ -19,6 +19,8 @@ import { StoreWhatsAppLink } from '@/components/analytics/StoreWhatsAppLink';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { Breadcrumbs } from '@/components/shared/Breadcrumbs';
 import { buildStoreJsonLd } from '@/lib/seo/structured-data';
+import Image from 'next/image';
+import { StoreContentTabs } from '@/components/lojas/StoreContentTabs';
 
 export const dynamic = 'force-dynamic';
 
@@ -89,15 +91,19 @@ export default async function StorePage({ params }: { params: { storeSlug: strin
         </Link>
 
         <div className="mt-6 flex flex-col gap-6 sm:flex-row sm:items-center">
-          <div
+         <div
             className={cn(
-              'flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl',
+              'relative flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-2xl',
               TONE_STYLES[store.coverTone],
             )}
           >
-            <span className="font-display text-[30px] font-bold tracking-tight">
-              {store.logoInitials}
-            </span>
+            {store.logoUrl ? (
+              <Image src={store.logoUrl} alt={store.name} fill className="object-cover" sizes="96px" />
+            ) : (
+              <span className="font-display text-[30px] font-bold tracking-tight">
+                {store.logoInitials}
+              </span>
+            )}
           </div>
 
           <div>
@@ -122,6 +128,7 @@ export default async function StorePage({ params }: { params: { storeSlug: strin
             <p className="mt-2 text-[14.5px] leading-relaxed text-ink-soft">{store.description}</p>
 
             <h2 className="mt-10 font-display text-[16px] font-semibold text-ink">Produtos</h2>
+            <StoreContentTabs products={products} galleryImages={store.galleryImages} storeName={store.name} />
             {products.length > 0 ? (
               <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
                 {products.map((product) => (

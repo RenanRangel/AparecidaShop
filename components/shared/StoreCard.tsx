@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { MapPin, ArrowUpRight, BadgeCheck } from 'lucide-react';
 import type { Store } from '@/types';
@@ -12,8 +13,12 @@ const TONE_STYLES: Record<Store['coverTone'], string> = {
 export function StoreCard({ store }: { store: Store }) {
   return (
     <div className="flex flex-col overflow-hidden rounded-2xl border border-sand bg-white transition-shadow hover:shadow-card">
-      <div className={cn('flex h-28 items-center justify-center', TONE_STYLES[store.coverTone])}>
-        <span className="font-display text-[26px] font-bold tracking-tight">{store.logoInitials}</span>
+      <div className={cn('relative flex h-28 items-center justify-center', TONE_STYLES[store.coverTone])}>
+        {store.logoUrl ? (
+          <Image src={store.logoUrl} alt={store.name} fill className="object-cover" sizes="(max-width: 640px) 100vw, 33vw" />
+        ) : (
+          <span className="font-display text-[26px] font-bold tracking-tight">{store.logoInitials}</span>
+        )}
       </div>
       <div className="flex flex-1 flex-col p-5">
         <span className="font-mono text-[10.5px] font-semibold uppercase tracking-wide text-pine-deep">

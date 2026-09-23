@@ -106,6 +106,7 @@ model Store {
   latitude    Float?
   longitude   Float?
   zone        StoreZone?
+  logoUrl String?
 
   cnpj        String
   phone       String?
@@ -128,6 +129,7 @@ model Store {
   updatedAt   DateTime    @updatedAt
 
   members       StoreMember[]
+  galleryImages StoreGalleryImage[]
   categories    StoreCategory[]
   products      Product[]
   statusHistory StoreStatusHistory[]
@@ -142,6 +144,18 @@ model Store {
 enum StoreMemberRole {
   OWNER
   EDITOR
+}
+
+model StoreGalleryImage {
+  id        String   @id @default(cuid())
+  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  storeId   String
+  url       String
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([storeId])
+  @@map("store_gallery_images")
 }
 
 // N:N User <-> Store — múltiplos administradores por loja,

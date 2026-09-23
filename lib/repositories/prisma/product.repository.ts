@@ -15,7 +15,7 @@ function mapProduct(product: any): ProductWithStore {
     storeShopeeUrl: product.store?.shopeeUrl ?? undefined,
     storeMercadoLivreUrl: product.store?.mercadoLivreUrl ?? undefined,
     storeTiktokShopUrl: product.store?.tiktokShopUrl ?? undefined,
-
+    storeLogoUrl: product.store?.logoUrl ?? undefined,
     price: product.price,
 
     imageTone: "sand",

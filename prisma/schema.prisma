@@ -224,7 +224,7 @@ enum UserRole {
 }
 
 enum StoreZone {
-   GALERIA
+    GALERIA
     AV_ITAGUACU
     PORTO_ITAGUACU
     SHOPPING

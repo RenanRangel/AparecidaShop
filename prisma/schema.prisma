@@ -1,14 +1,3 @@
-// AparecidaShop — schema.prisma
-// Cobre o MVP atual (Store, Product) + os pontos de extensão já decididos:
-// múltiplos admins por loja, aprovação de loja, múltiplas imagens por
-// produto, múltiplas categorias por loja, auditoria, favoritos e avaliações.
-//
-// Convenções:
-// - id sempre cuid()
-// - dinheiro sempre em centavos (Int), nunca Float
-// - toda entidade "editável" tem createdAt + updatedAt
-// - enums em vez de strings livres onde o valor é um conjunto fechado
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -18,9 +7,215 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ---------------------------------------------------------------------------
-// Usuários
-// ---------------------------------------------------------------------------
+model AnalyticsEvent {
+  id        String             @id @default(cuid())
+  type      AnalyticsEventType
+  storeId   String
+  productId String?
+  sessionId String
+  origin    String?
+  createdAt DateTime           @default(now())
+  product   Product?           @relation(fields: [productId], references: [id])
+  store     Store              @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@index([storeId, type, createdAt])
+  @@index([productId, type, createdAt])
+  @@index([sessionId, type, storeId, createdAt])
+  @@map("analytics_events")
+}
+
+model User {
+  id                String               @id @default(cuid())
+  name              String
+  email             String               @unique
+  passwordHash      String?
+  role              UserRole             @default(VISITANTE)
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+  auditLogsMade     AuditLog[]
+  favoriteProducts  ProductFavorite[]
+  reviews           Review[]
+  favoriteStores    StoreFavorite[]
+  storeMemberships  StoreMember[]
+  statusChangesMade StoreStatusHistory[] @relation("StatusChangedBy")
+
+  @@map("users")
+}
+
+model Store {
+  id              String               @id @default(cuid())
+  name            String
+  slug            String               @unique
+  description     String
+  location        String
+  latitude        Float?
+  longitude       Float?
+  cnpj            String
+  phone           String?
+  whatsapp        String?
+  email           String?
+  instagram       String?
+  gallery         String?
+  logoUrl String?
+  logoInitials    String
+  coverTone       String               @default("pine")
+  status          StoreStatus          @default(PENDING)
+  isVerified      Boolean              @default(false)
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  mercadoLivreUrl String?
+  shopeeUrl       String?
+  tiktokShopUrl   String?
+  openingHours    String?
+  zone            StoreZone?
+  analyticsEvents AnalyticsEvent[]
+  products        Product[]
+  galleryImages StoreGalleryImage[]
+  reviews         Review[]
+  categories      StoreCategory[]
+  favoritedBy     StoreFavorite[]
+  members         StoreMember[]
+  statusHistory   StoreStatusHistory[]
+
+  @@index([status])
+  @@map("stores")
+}
+
+model StoreMember {
+  id        String          @id @default(cuid())
+  storeId   String
+  userId    String
+  role      StoreMemberRole @default(OWNER)
+  createdAt DateTime        @default(now())
+  store     Store           @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([storeId, userId])
+  @@map("store_members")
+}
+
+model Category {
+  id        String          @id @default(cuid())
+  name      String          @unique
+  slug      String          @unique
+  createdAt DateTime        @default(now())
+  products  Product[]
+  stores    StoreCategory[]
+
+  @@map("categories")
+}
+
+model StoreCategory {
+  storeId    String
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  store      Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@id([storeId, categoryId])
+  @@map("store_categories")
+}
+
+model Product {
+  id              String            @id @default(cuid())
+  storeId         String
+  categoryId      String
+  name            String
+  description     String?
+  price           Int?
+  status          ProductStatus     @default(ACTIVE)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  externalUrl     String?
+  analyticsEvents AnalyticsEvent[]
+  favoritedBy     ProductFavorite[]
+  images          ProductImage[]
+  category        Category          @relation(fields: [categoryId], references: [id])
+  store           Store             @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@index([storeId])
+  @@index([categoryId])
+  @@map("products")
+}
+
+model ProductImage {
+  id        String   @id @default(cuid())
+  productId String
+  url       String
+  altText   String?
+  position  Int      @default(0)
+  isCover   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@map("product_images")
+}
+
+model StoreStatusHistory {
+  id              String       @id @default(cuid())
+  storeId         String
+  fromStatus      StoreStatus?
+  toStatus        StoreStatus
+  changedByUserId String?
+  reason          String?
+  createdAt       DateTime     @default(now())
+  changedBy       User?        @relation("StatusChangedBy", fields: [changedByUserId], references: [id])
+  store           Store        @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@index([storeId])
+  @@map("store_status_history")
+}
+
+model AuditLog {
+  id         String      @id @default(cuid())
+  entityType String
+  entityId   String
+  action     AuditAction
+  userId     String?
+  diff       Json?
+  createdAt  DateTime    @default(now())
+  user       User?       @relation(fields: [userId], references: [id])
+
+  @@index([entityType, entityId])
+  @@map("audit_logs")
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  storeId   String
+  userId    String
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([storeId, userId])
+  @@map("reviews")
+}
+
+model StoreFavorite {
+  userId    String
+  storeId   String
+  createdAt DateTime @default(now())
+  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, storeId])
+  @@map("store_favorites")
+}
+
+model ProductFavorite {
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, productId])
+  @@map("product_favorites")
+}
 
 enum UserRole {
   ADMIN
@@ -29,13 +224,10 @@ enum UserRole {
 }
 
 enum StoreZone {
-  GALERIA
+  CENTRO
   AV_ITAGUACU
+  PROXIMO_SANTUARIO
   PORTO_ITAGUACU
-  SHOPPING
-  LADEIRA
-  RADIO_TV
-  AV_JULIO_PRESTES
 }
 
 enum AnalyticsEventType {
@@ -46,50 +238,6 @@ enum AnalyticsEventType {
   LIST_WHATSAPP_SENT
 }
 
-// Evento bruto — sem tabela de agregação por enquanto. Pra escala atual do
-// MVP, consultas agregadas (COUNT/GROUP BY) direto nesta tabela são
-// suficientes. Se o volume crescer muito, um job de agregação diária vira
-// a próxima otimização — não precisa disso agora.
-model AnalyticsEvent {
-  id        String             @id @default(cuid())
-  type      AnalyticsEventType
-  store     Store              @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  storeId   String
-  product   Product?           @relation(fields: [productId], references: [id], onDelete: SetNull)
-  productId String?
-  sessionId String             // identificador anônimo (cookie), sem dado pessoal
-  origin    String?            // "página inicial" | "diretório de lojas" | "link externo" | "direto" | etc.
-  createdAt DateTime           @default(now())
-
-  @@index([storeId, type, createdAt])
-  @@index([productId, type, createdAt])
-  @@index([sessionId, type, storeId, createdAt])
-  @@map("analytics_events")
-}
-
-model User {
-  id           String   @id @default(cuid())
-  name         String
-  email        String   @unique
-  passwordHash String?
-  role         UserRole @default(VISITANTE)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  storeMemberships  StoreMember[]
-  statusChangesMade StoreStatusHistory[] @relation("StatusChangedBy")
-  auditLogsMade     AuditLog[]
-  reviews           Review[]
-  favoriteStores    StoreFavorite[]
-  favoriteProducts  ProductFavorite[]
-
-  @@map("users")
-}
-
-// ---------------------------------------------------------------------------
-// Lojas
-// ---------------------------------------------------------------------------
-
 enum StoreStatus {
   PENDING
   APPROVED
@@ -97,53 +245,22 @@ enum StoreStatus {
   SUSPENDED
 }
 
-model Store {
-  id          String      @id @default(cuid())
-  name        String
-  slug        String      @unique
-  description String
-  location    String
-  latitude    Float?
-  longitude   Float?
-  zone        StoreZone?
-  logoUrl String?
-
-  cnpj        String
-  phone       String?
-  whatsapp    String?
-  email       String?
-  instagram   String?
-  openingHours String?
-  gallery     String?
-  shopeeUrl   String?
-  mercadoLivreUrl String?
-  tiktokShopUrl   String?
-
-  logoInitials String
-  coverTone    String     @default("pine")
-
-  status      StoreStatus @default(PENDING)
-  isVerified  Boolean     @default(false)
-
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-
-  members       StoreMember[]
-  galleryImages StoreGalleryImage[]
-  categories    StoreCategory[]
-  products      Product[]
-  statusHistory StoreStatusHistory[]
-  reviews       Review[]
-  favoritedBy   StoreFavorite[]
-  analyticsEvents AnalyticsEvent[]
-
-  @@index([status])
-  @@map("stores")
-}
-
 enum StoreMemberRole {
   OWNER
   EDITOR
+}
+
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  APPROVE
+  REJECT
 }
 
 model StoreGalleryImage {
@@ -156,183 +273,4 @@ model StoreGalleryImage {
 
   @@index([storeId])
   @@map("store_gallery_images")
-}
-
-// N:N User <-> Store — múltiplos administradores por loja,
-// um usuário podendo administrar mais de uma loja.
-model StoreMember {
-  id        String          @id @default(cuid())
-  store     Store           @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  storeId   String
-  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  role      StoreMemberRole @default(OWNER)
-  createdAt DateTime        @default(now())
-
-  @@unique([storeId, userId])
-  @@map("store_members")
-}
-
-// ---------------------------------------------------------------------------
-// Categorias
-// ---------------------------------------------------------------------------
-
-model Category {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  slug      String   @unique
-  createdAt DateTime @default(now())
-
-  stores   StoreCategory[]
-  products Product[]
-
-  @@map("categories")
-}
-
-// N:N Store <-> Category — múltiplas categorias por loja.
-model StoreCategory {
-  store      Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  storeId    String
-  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  categoryId String
-
-  @@id([storeId, categoryId])
-  @@map("store_categories")
-}
-
-// ---------------------------------------------------------------------------
-// Produtos
-// ---------------------------------------------------------------------------
-
-enum ProductStatus {
-  ACTIVE
-  INACTIVE
-}
-
-model Product {
-  id         String        @id @default(cuid())
-  store      Store         @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  storeId    String
-  category   Category      @relation(fields: [categoryId], references: [id])
-  categoryId String
-
-  name        String
-  description String?
-  price       Int?          // centavos; null = "sob consulta"
-  externalUrl String?
-  status      ProductStatus @default(ACTIVE)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  images      ProductImage[]
-  favoritedBy ProductFavorite[]
-  analyticsEvents AnalyticsEvent[]
-
-  @@index([storeId])
-  @@index([categoryId])
-  @@map("products")
-}
-
-// Múltiplas imagens por produto, com ordem e uma capa.
-model ProductImage {
-  id        String   @id @default(cuid())
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId String
-  url       String
-  altText   String?
-  position  Int      @default(0)
-  isCover   Boolean  @default(false)
-  createdAt DateTime @default(now())
-
-  @@index([productId])
-  @@map("product_images")
-}
-
-// ---------------------------------------------------------------------------
-// Histórico de status da loja
-// ---------------------------------------------------------------------------
-
-model StoreStatusHistory {
-  id              String       @id @default(cuid())
-  store           Store        @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  storeId         String
-  fromStatus      StoreStatus?
-  toStatus        StoreStatus
-  changedBy       User?        @relation("StatusChangedBy", fields: [changedByUserId], references: [id])
-  changedByUserId String?
-  reason          String?
-  createdAt       DateTime     @default(now())
-
-  @@index([storeId])
-  @@map("store_status_history")
-}
-
-// ---------------------------------------------------------------------------
-// Auditoria genérica
-// ---------------------------------------------------------------------------
-
-enum AuditAction {
-  CREATE
-  UPDATE
-  DELETE
-  APPROVE
-  REJECT
-}
-
-// entityType/entityId não são FK real de propósito: precisa cobrir Store,
-// Product, User etc. sem uma tabela de log por entidade.
-model AuditLog {
-  id         String      @id @default(cuid())
-  entityType String
-  entityId   String
-  action     AuditAction
-  user       User?       @relation(fields: [userId], references: [id])
-  userId     String?
-  diff       Json?
-  createdAt  DateTime    @default(now())
-
-  @@index([entityType, entityId])
-  @@map("audit_logs")
-}
-
-// ---------------------------------------------------------------------------
-// Avaliações e favoritos
-// ---------------------------------------------------------------------------
-
-model Review {
-  id        String   @id @default(cuid())
-  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  storeId   String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  rating    Int      // 1-5, validado na camada de aplicação
-  comment   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([storeId, userId])
-  @@map("reviews")
-}
-
-model StoreFavorite {
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  storeId   String
-  createdAt DateTime @default(now())
-
-  @@id([userId, storeId])
-  @@map("store_favorites")
-}
-
-model ProductFavorite {
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId String
-  createdAt DateTime @default(now())
-
-  @@id([userId, productId])
-  @@map("product_favorites")
 }

@@ -7,7 +7,9 @@ import { prisma } from '@/lib/prisma';
 import { isValidCNPJ, isValidEmail, isValidPhone, isValidUrl } from '@/lib/validation';
 import { slugify } from '@/lib/utils';
 import { geocodeAddress } from '@/lib/geocoding';
-import { STORE_ZONES, StoreZoneValue } from '@/lib/constants/zones';
+import { STORE_ZONES } from '@/lib/constants/zones';
+import { StoreZone } from '@prisma/client';
+
 
 export interface CreateStoreState {
   errors?: Record<string, string>;
@@ -86,7 +88,7 @@ export async function createStore(
         slug,
         description,
         location,
-        zone: zone as StoreZoneValue,
+        zone: zone as StoreZone,
         cnpj: cnpj,
         phone: phone || null,
         whatsapp: whatsapp || null,

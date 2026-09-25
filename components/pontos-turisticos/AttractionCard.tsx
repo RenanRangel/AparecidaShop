@@ -1,3 +1,4 @@
+import { ExternalLink } from 'lucide-react';
 import type { Attraction } from '@/types/attractions';
 
 const CATEGORY_STYLE: Record<Attraction['category'], string> = {
@@ -10,6 +11,10 @@ const CATEGORY_STYLE: Record<Attraction['category'], string> = {
 };
 
 export function AttractionCard({ attraction }: { attraction: Attraction }) {
+  const mapsUrl = attraction.mapSearchQuery
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(attraction.mapSearchQuery)}`
+    : undefined;
+
   return (
     <div className="flex flex-col gap-3 rounded-2xl border border-sand bg-white p-5">
       <div className="flex items-start justify-between gap-3">
@@ -24,6 +29,17 @@ export function AttractionCard({ attraction }: { attraction: Attraction }) {
         {attraction.name}
       </h3>
       <p className="text-[13px] leading-relaxed text-ink-soft">{attraction.description}</p>
+      {mapsUrl && (
+        
+          <a href={mapsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-1 inline-flex w-fit items-center gap-1.5 text-[12.5px] font-semibold text-pine hover:underline"
+        >
+          Ver no Google Maps
+          <ExternalLink size={12} />
+        </a>
+      )}
     </div>
   );
 }

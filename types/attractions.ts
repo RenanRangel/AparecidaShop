@@ -1,15 +1,9 @@
-export type AttractionCategory =
-  | 'Religioso'
-  | 'História'
-  | 'Mirante'
-  | 'Passeio'
-  | 'Família'
-  | 'Compras';
-
 export interface Attraction {
   id: string;
   name: string;
-  category: AttractionCategory;
+  category: 'Religioso' | 'História' | 'Mirante' | 'Passeio' | 'Família' | 'Compras';
   emoji: string;
   description: string;
+  mapClusterId?: 'santuario' | 'porto-itaguacu'; 
+  mapSearchQuery?: string;
 }

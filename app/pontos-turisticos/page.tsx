@@ -1,5 +1,6 @@
 import { Container } from '@/components/shared/Container';
 import { AttractionCard } from '@/components/pontos-turisticos/AttractionCard';
+import { AttractionsMap } from '@/components/pontos-turisticos/AttractionsMap';
 import { attractionsFixture } from '@/data/fixtures/attractions.fixtures';
 
 export const metadata = {
@@ -21,6 +22,10 @@ export default function PontosTuristicosPage() {
           Além do comércio local, Aparecida tem um roteiro rico de fé, história e passeios. Separamos
           os principais pontos pra você aproveitar sua visita.
         </p>
+
+        <div className="mt-8">
+          <AttractionsMap attractions={attractionsFixture} />
+        </div>
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {attractionsFixture.map((attraction) => (

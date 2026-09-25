@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Bricolage_Grotesque, Inter, IBM_Plex_Mono } from 'next/font/google';
 import './globals.css';
+import 'leaflet/dist/leaflet.css';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { Providers } from '@/app/providers';

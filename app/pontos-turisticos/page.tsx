@@ -1,7 +1,7 @@
-import dynamic from 'next/dynamic';
 import { Container } from '@/components/shared/Container';
 import { AttractionCard } from '@/components/pontos-turisticos/AttractionCard';
 import { attractionsFixture } from '@/data/fixtures/attractions.fixtures';
+import { AttractionsMap } from '@/components/pontos-turisticos/AttractionsMap';
 
 export const metadata = {
   title: 'Pontos turísticos de Aparecida — AparecidaShop',
@@ -9,15 +9,7 @@ export const metadata = {
     'Conheça os principais pontos turísticos e religiosos de Aparecida-SP.',
 };
 
-const AttractionsMap = dynamic(
-  () => import('@/components/pontos-turisticos/AttractionsMap').then((mod) => mod.AttractionsMap),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="h-[420px] w-full animate-pulse rounded-2xl border border-sand bg-sand/30" />
-    ),
-  }
-);
+
 
 export default function PontosTuristicosPage() {
   return (

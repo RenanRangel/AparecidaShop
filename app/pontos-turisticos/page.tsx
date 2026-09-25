@@ -1,12 +1,23 @@
+import dynamic from 'next/dynamic';
 import { Container } from '@/components/shared/Container';
 import { AttractionCard } from '@/components/pontos-turisticos/AttractionCard';
-import { AttractionsMap } from '@/components/pontos-turisticos/AttractionsMap';
 import { attractionsFixture } from '@/data/fixtures/attractions.fixtures';
 
 export const metadata = {
   title: 'Pontos turísticos de Aparecida — AparecidaShop',
-  description: 'Conheça os principais pontos turísticos e religiosos de Aparecida-SP.',
+  description:
+    'Conheça os principais pontos turísticos e religiosos de Aparecida-SP.',
 };
+
+const AttractionsMap = dynamic(
+  () => import('@/components/pontos-turisticos/AttractionsMap').then((mod) => mod.AttractionsMap),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-[420px] w-full animate-pulse rounded-2xl border border-sand bg-sand/30" />
+    ),
+  }
+);
 
 export default function PontosTuristicosPage() {
   return (
@@ -15,12 +26,15 @@ export default function PontosTuristicosPage() {
         <span className="text-[12px] font-semibold uppercase tracking-wide text-pine">
           Aparecida-SP
         </span>
+
         <h1 className="mt-2 font-display text-[32px] font-semibold tracking-tight text-ink sm:text-[40px]">
           Pontos turísticos
         </h1>
+
         <p className="mt-3 max-w-xl text-[15px] text-ink-soft">
-          Além do comércio local, Aparecida tem um roteiro rico de fé, história e passeios. Separamos
-          os principais pontos pra você aproveitar sua visita.
+          Além do comércio local, Aparecida tem um roteiro rico de fé, história
+          e passeios. Separamos os principais pontos pra você aproveitar sua
+          visita.
         </p>
 
         <div className="mt-8">
@@ -29,7 +43,10 @@ export default function PontosTuristicosPage() {
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {attractionsFixture.map((attraction) => (
-            <AttractionCard key={attraction.id} attraction={attraction} />
+            <AttractionCard
+              key={attraction.id}
+              attraction={attraction}
+            />
           ))}
         </div>
       </Container>

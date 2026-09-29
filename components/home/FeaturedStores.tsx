@@ -1,11 +1,11 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { Container } from '@/components/shared/Container';
-import { StoreCard } from '@/components/shared/StoreCard';
+import { StoreTicker } from '@/components/home/StoreTicker';
 import { storeRepository } from '@/lib/repositories';
 
 export async function FeaturedStores() {
-  const stores = await storeRepository.getFeatured(3);
+  const stores = await storeRepository.getRandom(10);
 
   return (
     <section className="bg-pine-50/50 py-20 sm:py-28">
@@ -28,11 +28,7 @@ export async function FeaturedStores() {
           </Link>
         </div>
 
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {stores.map((store) => (
-            <StoreCard key={store.id} store={store} />
-          ))}
-        </div>
+        <StoreTicker stores={stores} />
       </Container>
     </section>
   );

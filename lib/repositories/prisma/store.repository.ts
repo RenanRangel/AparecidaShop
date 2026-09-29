@@ -192,4 +192,23 @@ export class PrismaStoreRepository implements StoreRepository {
 
   }
 
+  async getRandom(limit = 10): Promise<Store[]> {
+
+    const stores = await prisma.store.findMany({
+      where: { status: "APPROVED" },
+      include: {
+        categories: { include: { category: true } },
+        galleryImages: true,
+      },
+    });
+
+    for (let i = stores.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [stores[i], stores[j]] = [stores[j], stores[i]];
+    }
+
+    return stores.slice(0, limit).map(mapStore);
+
+  }
+
 }

@@ -6,6 +6,8 @@ export interface StoreRepository {
   getById(id: string): Promise<Store | null>;
   getBySlug(slug: string): Promise<Store | null>;
   getFeatured(limit?: number): Promise<Store[]>;
+  getRandom(limit?: number): Promise<Store[]>; 
+
 }
 
 export interface CreateProductInput {
@@ -32,8 +34,8 @@ export interface ProductRepository {
   getByStoreId(storeId: string): Promise<ProductWithStore[]>;
   getPopular(limit?: number): Promise<ProductWithStore[]>;
   search(query: string): Promise<ProductWithStore[]>;
+  getRandomOnePerStore(limit?: number): Promise<ProductWithStore[]>;
 
-  // Escrita — sempre escopada por storeId (ownership), nunca só por id.
   create(input: CreateProductInput): Promise<ProductWithStore>;
   update(id: string, storeId: string, input: UpdateProductInput): Promise<ProductWithStore | null>;
   delete(id: string, storeId: string): Promise<boolean>;

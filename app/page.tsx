@@ -6,12 +6,12 @@ import { productRepository } from '@/lib/repositories';
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
-  const popularProducts = await productRepository.getPopular(4);
+  const initialProducts = await productRepository.getRandomOnePerStore(8);
 
   return (
     <>
       <Hero />
-      <SearchSection initialPopularProducts={popularProducts} />
+      <SearchSection initialProducts={initialProducts} />
       <FeaturedStores />
     </>
   );

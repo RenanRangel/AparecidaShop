@@ -148,6 +148,39 @@ implements ProductRepository {
 
   }
 
+    /**
+   * Um produto aleatório por loja — garante diversidade na home (nunca
+   * duas fotos da mesma loja seguidas). Embaralha em memória (Fisher-Yates)
+   * e pega o primeiro produto de cada loja distinta. Simples e suficiente
+   * pro volume atual; se o catálogo crescer muito, migrar pra amostragem
+   * via SQL (ORDER BY random()) é o próximo passo.
+   */
+    async getRandomOnePerStore(limit = 8): Promise<ProductWithStore[]> {
+
+      const products = await prisma.product.findMany({
+        where: { status: 'ACTIVE' },
+        include: { store: true, category: true, images: true },
+      });
+  
+      for (let i = products.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [products[i], products[j]] = [products[j], products[i]];
+      }
+  
+      const seenStores = new Set<string>();
+      const picked: typeof products = [];
+  
+      for (const product of products) {
+        if (seenStores.has(product.storeId)) continue;
+        seenStores.add(product.storeId);
+        picked.push(product);
+        if (picked.length >= limit) break;
+      }
+  
+      return picked.map(mapProduct);
+  
+    }
+
 
 
   async search(query:string)

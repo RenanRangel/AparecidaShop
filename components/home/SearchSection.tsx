@@ -3,16 +3,16 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { Search, SearchX } from 'lucide-react';
 import { Container } from '@/components/shared/Container';
-import { ProductCard } from '@/components/shared/ProductCard';
+import { ProductShowcaseCard } from '@/components/home/ProductShowcaseCard';
 import { searchProductsAction } from '@/app/actions/search';
 import type { ProductWithStore } from '@/types';
 
 const SUGGESTIONS = ['terço', 'camiseta', 'lembrança', 'doce', 'imagem'];
 
 export function SearchSection({
-  initialPopularProducts,
+  initialProducts,
 }: {
-  initialPopularProducts: ProductWithStore[];
+  initialProducts: ProductWithStore[];
 }) {
   const [query, setQuery] = useState('');
   const [submitted, setSubmitted] = useState('');
@@ -21,8 +21,6 @@ export function SearchSection({
 
   const hasSearched = submitted.trim().length > 0;
 
-  // Busca assíncrona: hoje resolve contra o array mockado, futuramente
-  // pode virar uma chamada real à API/Postgres sem mudar este componente.
   useEffect(() => {
     if (!hasSearched) {
       setResults([]);
@@ -33,7 +31,7 @@ export function SearchSection({
     setIsSearching(true);
 
     searchProductsAction(submitted).then((found) => {
-            if (isCurrent) {
+      if (isCurrent) {
         setResults(found);
         setIsSearching(false);
       }
@@ -50,7 +48,7 @@ export function SearchSection({
   }
 
   const showEmptyState = hasSearched && !isSearching && results.length === 0;
-  const visibleProducts = hasSearched ? results : initialPopularProducts;
+  const visibleProducts = hasSearched ? results : initialProducts;
 
   return (
     <section id="busca" className="py-20 sm:py-28">
@@ -106,7 +104,7 @@ export function SearchSection({
 
         <div className="mt-14">
           <h3 className="font-display text-[15px] font-semibold text-ink">
-            {hasSearched ? `Resultados para "${submitted}"` : 'Populares agora'}
+            {hasSearched ? `Resultados para "${submitted}"` : 'Alguns dos produtos disponíveis'}
           </h3>
 
           {showEmptyState ? (
@@ -118,9 +116,9 @@ export function SearchSection({
               </p>
             </div>
           ) : (
-            <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
               {visibleProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductShowcaseCard key={product.id} product={product} />
               ))}
             </div>
           )}

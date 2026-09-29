@@ -1,16 +1,28 @@
+'use client';
+
+import { useState } from 'react';
 import { ProductCard } from '@/components/shared/ProductCard';
 import type { ProductWithStore } from '@/types';
 
 export function ProductTicker({ products }: { products: ProductWithStore[] }) {
+  const [isPaused, setIsPaused] = useState(false);
+
   if (products.length === 0) return null;
 
   const loopedProducts = [...products, ...products];
 
   return (
-    <div className="mt-6 overflow-hidden">
+    <div
+      className="mt-6 overflow-hidden"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
       <div
-        className="flex w-max gap-4 hover:[animation-play-state:paused]"
-        style={{ animation: `ticker-scroll ${products.length * 6}s linear infinite` }}
+        className="flex w-max gap-4"
+        style={{
+          animation: `ticker-scroll ${products.length * 6}s linear infinite`,
+          animationPlayState: isPaused ? 'paused' : 'running',
+        }}
       >
         {loopedProducts.map((product, index) => (
           <div

@@ -3,7 +3,8 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { Search, SearchX } from 'lucide-react';
 import { Container } from '@/components/shared/Container';
-import { ProductShowcaseCard } from '@/components/home/ProductShowcaseCard';
+import { ProductCard } from '@/components/shared/ProductCard';
+import { ProductTicker } from '@/components/home/ProductTicker';
 import { searchProductsAction } from '@/app/actions/search';
 import type { ProductWithStore } from '@/types';
 
@@ -48,7 +49,6 @@ export function SearchSection({
   }
 
   const showEmptyState = hasSearched && !isSearching && results.length === 0;
-  const visibleProducts = hasSearched ? results : initialProducts;
 
   return (
     <section id="busca" className="py-20 sm:py-28">
@@ -115,12 +115,14 @@ export function SearchSection({
                 &quot;terço&quot; ou &quot;camiseta&quot;.
               </p>
             </div>
-          ) : (
-            <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-              {visibleProducts.map((product) => (
-                <ProductShowcaseCard key={product.id} product={product} />
+          ) : hasSearched ? (
+            <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+              {results.map((product) => (
+                <ProductCard key={product.id} product={product} />
               ))}
             </div>
+          ) : (
+            <ProductTicker products={initialProducts} />
           )}
         </div>
       </Container>

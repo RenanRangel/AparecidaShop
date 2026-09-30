@@ -3,8 +3,8 @@ import { ArrowRight, MapPin } from 'lucide-react';
 import { STORE_ZONES, STORE_ZONE_LABELS, type StoreZoneValue } from '@/lib/constants/zones';
 
 const ZONE_TONE: Record<StoreZoneValue, string> = {
-    AV_ITAGUACU: 'bg-pine-50 text-pine',
-    PORTO_ITAGUACU: 'bg-marigold-light text-marigold-dark',
+    AV_ITAGUACU: 'bg-marigold-light text-marigold-dark',
+    PORTO_ITAGUACU: 'bg-pine-50 text-pine',
     GALERIA: 'bg-pine-50 text-pine',
     SHOPPING: 'bg-marigold-light text-marigold-dark',
     LADEIRA: 'bg-pine-50 text-pine',

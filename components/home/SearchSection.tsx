@@ -103,9 +103,12 @@ export function SearchSection({
         </div>
 
         <div className="mt-14">
-          <h3 className="font-display text-[15px] font-semibold text-ink">
+        <span className="text-[12px] font-semibold uppercase tracking-wide text-pine">
+            {hasSearched ? 'Busca' : 'Comércio local'}
+          </span>
+          <h2 className="mt-2 font-display text-[28px] font-semibold tracking-tight text-ink sm:text-[34px]">
             {hasSearched ? `Resultados para "${submitted}"` : 'Alguns dos produtos disponíveis'}
-          </h3>
+          </h2>
 
           {showEmptyState ? (
             <div className="mt-6 flex flex-col items-center gap-3 rounded-2xl border border-dashed border-sand py-16 text-center">

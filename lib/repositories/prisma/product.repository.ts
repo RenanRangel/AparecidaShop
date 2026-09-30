@@ -38,10 +38,19 @@ export class PrismaProductRepository
 implements ProductRepository {
 
 
+  // Feed público: só produto ATIVO de loja APROVADA. Enquanto a loja está
+  // PENDING, os produtos que o lojista já cadastrou ficam "invisíveis" pra
+  // qualquer lugar público — e aparecem automaticamente no instante em que
+  // um admin aprova a loja, sem precisar de nenhuma ação extra.
   async getAll(): Promise<ProductWithStore[]> {
 
     const products =
       await prisma.product.findMany({
+
+        where: {
+          status: 'ACTIVE',
+          store: { status: 'APPROVED' },
+        },
 
         include:{
           store:true,
@@ -62,6 +71,9 @@ implements ProductRepository {
 
 
 
+  // Sem filtro de status de propósito: usado pelo painel do lojista (ver o
+  // próprio produto antes da loja ser aprovada) e pela página pública do
+  // produto (link já compartilhado continua abrindo).
   async getById(id:string)
   :Promise<ProductWithStore|null>{
 
@@ -92,6 +104,8 @@ implements ProductRepository {
 
 
 
+  // Sem filtro de status de propósito: é usado pela página da própria loja
+  // (que já checa se a loja existe) e pelo painel do lojista.
   async getByStoreId(storeId:string)
   :Promise<ProductWithStore[]>{
 
@@ -129,6 +143,11 @@ implements ProductRepository {
     const products =
       await prisma.product.findMany({
 
+        where: {
+          status: 'ACTIVE',
+          store: { status: 'APPROVED' },
+        },
+
         take:limit,
 
         include:{
@@ -158,7 +177,10 @@ implements ProductRepository {
     async getRandomOnePerStore(limit = 8): Promise<ProductWithStore[]> {
 
       const products = await prisma.product.findMany({
-        where: { status: 'ACTIVE' },
+        where: {
+          status: 'ACTIVE',
+          store: { status: 'APPROVED' },
+        },
         include: { store: true, category: true, images: true },
       });
   
@@ -198,6 +220,8 @@ implements ProductRepository {
       await prisma.product.findMany({
 
         where:{
+          status: 'ACTIVE',
+          store: { status: 'APPROVED' },
           OR:[
             {
               name:{
@@ -258,10 +282,6 @@ implements ProductRepository {
   }
 
 
-  // update/delete usam updateMany/deleteMany com { id, storeId } no where —
-  // não é possível um lojista alterar produto de outra loja mesmo que
-  // manipule o id na URL/form, porque a query só afeta linha nenhuma se o
-  // storeId não bater (count = 0 → devolve null/false).
   async update(id: string, storeId: string, input: UpdateProductInput): Promise<ProductWithStore | null> {
 
     const result = await prisma.product.updateMany({

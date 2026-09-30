@@ -8,7 +8,6 @@ import { Container } from '@/components/shared/Container';
 import { useProductList } from '@/components/list/ListProvider';
 
 const LINKS = [
-  { href: '/', label: 'Início' },
   { href: '/lojas', label: 'Lojas' },
   { href: '/pontos-turisticos', label: 'Pontos turísticos' },
   { href: '/missas', label: 'Missas' },

@@ -22,16 +22,22 @@ function haversineDistanceKm(a: { lat: number; lng: number }, b: { lat: number; 
   return R * 2 * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
 }
 
-export function StoreDirectoryFilters({ stores }: { stores: Store[] }) {
+export function StoreDirectoryFilters({
+  stores,
+  initialZone,
+}: {
+  stores: Store[];
+  initialZone?: StoreZoneValue;
+}) {
   const [activeCategory, setActiveCategory] = useState<CategoryOption>('Todas');
-  const [activeZone, setActiveZone] = useState<ZoneOption>('Toda Aparecida');
+  const [activeZone, setActiveZone] = useState<ZoneOption>(initialZone ?? 'Toda Aparecida');
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [locationError, setLocationError] = useState<string | null>(null);
   const [isLocating, setIsLocating] = useState(false);
 
   function handleSortByDistance() {
     if (userLocation) {
-      setUserLocation(null); // clicar de novo desativa a ordenação
+      setUserLocation(null);
       return;
     }
 

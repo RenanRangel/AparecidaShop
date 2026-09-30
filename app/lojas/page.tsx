@@ -1,5 +1,6 @@
 import { Container } from '@/components/shared/Container';
 import { StoreDirectoryFilters } from '@/components/lojas/StoreDirectoryFilters';
+import { PageHeader } from '@/components/shared/PageHeader';
 import { storeRepository } from '@/lib/repositories';
 import { STORE_ZONES, type StoreZoneValue } from '@/lib/constants/zones';
 
@@ -19,16 +20,11 @@ export default async function LojasPage({
   return (
     <section className="py-16 sm:py-24">
       <Container>
-        <span className="text-[12px] font-semibold uppercase tracking-wide text-pine">
-          Diretório
-        </span>
-        <h1 className="mt-2 font-display text-[32px] font-semibold tracking-tight text-ink sm:text-[40px]">
-          Lojas cadastradas em Aparecida
-        </h1>
-        <p className="mt-3 max-w-xl text-[15px] text-ink-soft">
-          Navegue pelo comércio local por categoria e encontre a loja certa para o que você
-          procura.
-        </p>
+        <PageHeader
+          eyebrow="Diretório"
+          title="Lojas cadastradas em Aparecida"
+          description="Navegue pelo comércio local por categoria e encontre a loja certa para o que você procura."
+        />
 
         <StoreDirectoryFilters stores={stores} initialZone={initialZone} />
       </Container>

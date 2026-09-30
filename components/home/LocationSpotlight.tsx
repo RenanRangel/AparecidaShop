@@ -3,14 +3,14 @@ import { ArrowRight, MapPin } from 'lucide-react';
 import { STORE_ZONES, STORE_ZONE_LABELS, type StoreZoneValue } from '@/lib/constants/zones';
 
 const ZONE_TONE: Record<StoreZoneValue, string> = {
-  AV_ITAGUACU: 'bg-pine-50 text-pine',
-  PORTO_ITAGUACU: 'bg-marigold-light text-marigold-dark',
-  GALERIA: 'bg-sand-light text-ink-soft',
-  SHOPPING: 'bg-pine-100 text-pine-deep',
-  LADEIRA: 'bg-marigold-light text-marigold-dark',
-  RADIO_TV: 'bg-pine-50 text-pine',
-  AV_JULIO_PRESTES: 'bg-sand-light text-ink-soft',
-};
+    AV_ITAGUACU: 'bg-pine-50 text-pine',
+    PORTO_ITAGUACU: 'bg-marigold-light text-marigold-dark',
+    GALERIA: 'bg-pine-50 text-pine',
+    SHOPPING: 'bg-marigold-light text-marigold-dark',
+    LADEIRA: 'bg-pine-50 text-pine',
+    RADIO_TV: 'bg-marigold-light text-marigold-dark',
+    AV_JULIO_PRESTES: 'bg-pine-50 text-pine',
+  };
 
 export function LocationSpotlight() {
   return (

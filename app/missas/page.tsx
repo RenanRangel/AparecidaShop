@@ -1,5 +1,6 @@
 import { Container } from '@/components/shared/Container';
 import { MassScheduleCard } from '@/components/missas/MassScheduleCard';
+import { PageHeader } from '@/components/shared/PageHeader';
 import {
   massScheduleFixture,
   MASS_SCHEDULE_SOURCE_URL,
@@ -15,15 +16,11 @@ export default function MissasPage() {
   return (
     <section className="py-16 sm:py-24">
       <Container>
-        <span className="text-[12px] font-semibold uppercase tracking-wide text-pine">
-          Aparecida-SP
-        </span>
-        <h1 className="mt-2 font-display text-[32px] font-semibold tracking-tight text-ink sm:text-[40px]">
-          Horários de missa
-        </h1>
-        <p className="mt-3 max-w-xl text-[15px] text-ink-soft">
-          Celebrações no Santuário Nacional e na Basílica Histórica.
-        </p>
+      <PageHeader
+          eyebrow="Aparecida-SP"
+          title="Pontos turísticos"
+          description="Além do comércio local, Aparecida tem um roteiro rico de fé, história e passeios. Separamos os principais pontos pra você aproveitar sua visita."
+        />
 
         <div className="mt-10 grid gap-5 sm:grid-cols-2">
           {massScheduleFixture.map((schedule) => (
